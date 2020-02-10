@@ -4,7 +4,9 @@ Mutliple Sequence Alignment Pipeline for Larger Bacterial and Fungal Genomes.
 Input: Fasta File of whole genomes. For example we have 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. Here we can arbitrarily choose genome 1 as query and the rest of genomes as subjects.
 
 Step 1: Piarwise alignment between genome 1 and 2 using any tools that generates MAF format as output, here we used lastz (http://www.bx.psu.edu/miller_lab/dist/README.lastz-1.02.00/README.lastz-1.02.00a.html), genome 1 as query and genome 2 as subject ,allowing 10% mistmatch and 5% gap:
+```bash
 ./lastz  genome2.fa[multiple]  genome1.fa --ambiguous=n  --ambiguous=iupac  --gfextend --chain --gapped  --identity=90 --continuity=95  --format=maf  --out 1_vs_2.maf
+```
 Step 2: Extract non overlaping query sequences (genome1.fa) from MAF file generated in step 1.
 java -jar  MFbio.jar  showform=no  task=maf2fastaunique  srcdir=1_vs_2.maf  destdir=1_vs_2.fa
 step 3: Pairwise fasta file generated at step 2 into genome 3:
