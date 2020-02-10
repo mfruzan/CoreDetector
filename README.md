@@ -17,7 +17,7 @@ step 3: Pairwise fasta file generated at step 2 into genome 3:
 ```
 If we had more genomes for alignments we would just repeated steps 2 and 3 for each genome.
 
-### Now it is time to carry out track back algorithm:
+### Now it is time to carry out back tracking algorithm:
 Step 4: Extract non-ovelapping entries from last maf file (in our example 1_vs_2_vs_3.maf) and generate new maf file:
 ```bash
 java -jar  MFbio.jar  showform=no  task=mafuniquequery  srcdir=1_vs_2_vs_3.maf  destdir=1_vs_2_vs_3_unique.maf
