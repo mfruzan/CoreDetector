@@ -16,6 +16,7 @@ Step 2: Extract non overlaping query (genome1) from MAF file generated at step 1
 java -jar  MFbio.jar  --task maf2fastaunique  --srcdir /dir/to/maf/1_vs_2.maf  --destdir /dir/to/temp/fasta/1_vs_2.fa --file1 /dir/to/filtered/maf/1_2.maf  --p1 50
 ```
 This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be used at last stage backtracking algorithm. p1 is minimum HSP length that goes into outputs (contigs shorter than 50bp will be skipped)
+
 step 3: Pairwise fasta file generated at step 2 into genome 3:
 lastz:
 ```bash
@@ -25,13 +26,13 @@ GSAlign:
 ```bash
 ./GSAlign -r genome3.fa -q /dir/to/temp/fasta/1_vs_2.fa -o /dir/to/maf/1_vs_2_vs_3 -no_vcf -t 8 -idy 90 -one -alen 50 -ind 10 -fmt 1
 ```
-If we had more genomes for alignments we would just repeated steps 2 and 3 for each genome.
-
 
 Step 4: Extract non-ovelapping entries from last maf file (in our example 1_vs_2_vs_3.maf) and generate new maf file:
 ```bash
 java -jar  MFbio.jar  showform=no  task=mafuniquequery  --srcdir /dir/to/maf/1_vs_2_vs_3.maf  --destdir /dir/to/temp/fasta/1_vs_2_vs_3.fa --file1 /dir/to/filtered/maf/1_3.maf  --p1 50
 ```
+If we had more genomes for alignments we would just repeated steps 2 and 3 for each genome.
+
 ### Now it is time to carry out back tracking algorithm:
 step 5: Generate multiple sequence alignment file:
 ```bash
