@@ -15,7 +15,7 @@ Step 2: Extract non overlaping query (genome1) from MAF file generated at step 1
 ```bash
 java -jar  MFbio.jar  --task maf2fastaunique  --srcdir /dir/to/maf/1_vs_2.maf  --destdir /dir/to/temp/fasta/1_vs_2.fa --file1 /dir/to/filtered/maf/1_2.maf  --p1 50
 ```
-This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be used at last stage backtracking algorithm. p1 is minimum HSP length that goes into outputs (contigs shorter than 50bp will be skipped)
+This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be  used at last stage backtracking algorithm. p1 is minimum HSP length that goes into outputs HSP shorter than 50bp will be skipped)
 
 step 3: Pairwise fasta file generated at step 2 into genome 3:
 lastz:
