@@ -15,7 +15,7 @@ Step 2: Extract non overlaping query (genome1) from MAF file generated at step 1
 ```bash
 java -jar  MFbio.jar  --task maf2fastaunique  --srcdir /dir/to/maf/1_vs_2.maf  --destdir /dir/to/temp/fasta/1_vs_2.fa --file1 /dir/to/filtered/maf/1_2.maf  --p1 50
 ```
-This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be  used at last stage backtracking algorithm. p1 is minimum HSP length that goes into outputs HSP shorter than 50bp will be skipped)
+This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be  used at last stage backtracking algorithm. --p1 is minimum HSP length that goes into outputs HSP shorter than 50bp will be skipped)
 
 step 3: Pairwise fasta file generated at step 2 into genome 3:
 lastz:
@@ -36,8 +36,14 @@ If we had more genomes for alignments we would just repeated steps 2 and 3 for e
 ### Now it is time to carry out back tracking algorithm:
 step 5: Generate multiple sequence alignment file:
 ```bash
-java -jar  MFbio.jar  --task maf2msa  --srcdir /dir/of/filtered/maf/  --file1 1_3.maf,1_2.maf  --destdir output.msa
+java -jar  MFbio.jar  --task maf2msa  --srcdir /dir/of/filtered/maf/  --p1 1_3.maf,1_2.maf  --destdir concatinated_msa.fa --file1 msa.maf --file2 genomes.txt
 ```
-where srcdir is directory where maf files are located, file1 comma separated of maf files generated at step 3, ordered from last to the first one.
+where --srcdir is directory where filtered maf files are located, --p1 is comma separated filtered maf file names generated at step 3, ordered from last to the first one.
+--file1 is generated multiple sequence alignment file. --destdir is concatinated entries of msa.maf in fasta format
+--file2 is input tab separated text file in following format:  Genome_Alias_Name Genome_fasta_file
+one line for each genome, for our example genomes.txt could be like:
+Genome1 /dir/to/fasta/files/g1.fa
+Genome2 /dir/to/fasta/files/g2.fa
+Genome3 /dir/to/fasta/files/g3.fa
 
 
