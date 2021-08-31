@@ -39,11 +39,12 @@ step 5: Generate multiple sequence alignment file:
 java -jar  MFbio.jar  --task maf2msa  --srcdir /dir/of/filtered/maf/  --p1 1_3.maf,1_2.maf  --destdir concatinated_msa.fa --file1 msa.maf --file2 genomes.txt
 ```
 where --srcdir is directory where filtered maf files are located, --p1 is comma separated filtered maf file names generated at step 3, ordered from last to the first one.
---file1 is generated multiple sequence alignment file. --destdir is concatinated entries of msa.maf in fasta format
+--file1 is generated multiple sequence alignment file. --destdir is concatinated entries of msa.maf in fasta format. 
+
 --file2 is input tab separated text file in following format:  Genome_Alias_Name Genome_fasta_file
 one line for each genome, for our example genomes.txt could be like:
+```bash
 Genome1 /dir/to/fasta/files/g1.fa
 Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
-
-
+```
