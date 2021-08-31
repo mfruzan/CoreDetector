@@ -41,7 +41,7 @@ java -jar  MFbio.jar  --task maf2msa  --srcdir /dir/of/filtered/maf/  --p1 1_3.m
 where --srcdir is directory where filtered maf files are located, --p1 is comma separated filtered maf file names generated at step 3, ordered from last to the first one.
 --file1 is generated multiple sequence alignment file. --destdir is concatinated entries of msa.maf in fasta format. 
 
---file2 is input tab separated text file in following format:  Genome_Alias_Name   Genome_fasta_file
+--file2 is input tab separated text file in the following format:  Genome_Alias_Name   Genome_fasta_file
 
 one line for each genome, for our example genomes.txt could be like:
 ```bash
