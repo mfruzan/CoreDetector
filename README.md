@@ -7,6 +7,10 @@ Step 1: Piarwise alignment between genome 1 and 2 using any tools that generates
 ```bash
 ./lastz  genome2.fa[multiple]  genome1.fa --ambiguous=n  --ambiguous=iupac  --gfextend --chain --gapped  --identity=90 --continuity=95  --format=maf  --out 1_vs_2.maf
 ```
+If we use GSAlign aligner from https://github.com/hsinnan75/GSAlign, the command would be (using 8 threads):
+```bash
+./GSAlign -r genome2.fa -q genome1 -o /dir/to/maf/1_vs_2 -no_vcf -t 8 -idy 90 -one -alen 50 -ind 10 -fmt 1
+```
 Step 2: Extract non overlaping query (genome1) from MAF file generated at step 1 and write into new fasta file. Contig names of new fasta file will include start and end offset, separated by ! special character.
 ```bash
 java -jar  MFbio.jar  showform=no  task=maf2fastaunique  srcdir=1_vs_2.maf  destdir=1_vs_2.fa
