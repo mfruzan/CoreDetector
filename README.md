@@ -15,9 +15,10 @@ Step 2: Extract non overlaping query (genome1) from MAF file generated at step 1
 ```bash
 java -jar  MFbio.jar  --task maf2fastaunique  --srcdir /dir/to/maf/1_vs_2.maf  --destdir /dir/to/temp/fasta/1_vs_2.fa --file1 /dir/to/filtered/maf/1_2.maf  --p1 50
 ```
-This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be  used at last stage backtracking algorithm. --p1 is minimum HSP length that goes into outputs HSP shorter than 50bp will be skipped)
+This job generated 2 outputs, one temporary fasta file that will beused for the next step pairwise alignment, and one filtered maf file that will be  used at last stage backtracking algorithm. --p1 is minimum HSP length that goes into outputs (HSP shorter than 50bp will be skipped)
 
 step 3: Pairwise fasta file generated at step 2 into genome 3:
+
 lastz:
 ```bash
 ./lastz  genome3.fa[multiple]  /dir/to/temp/fasta/1_vs_2.fa --ambiguous=n  --ambiguous=iupac  --gfextend --chain --gapped  --identity=90 --continuity=95  --format=maf  --out /dir/to/maf/1_vs_2_vs_3.maf
@@ -29,7 +30,7 @@ GSAlign:
 
 Step 4: Extract non-ovelapping entries from last maf file (in our example 1_vs_2_vs_3.maf) and generate new maf file:
 ```bash
-java -jar  MFbio.jar  showform=no  task=mafuniquequery  --srcdir /dir/to/maf/1_vs_2_vs_3.maf  --destdir /dir/to/temp/fasta/1_vs_2_vs_3.fa --file1 /dir/to/filtered/maf/1_3.maf  --p1 50
+java -jar  MFbio.jar  showform=no  --task mafuniquequery  --srcdir /dir/to/maf/1_vs_2_vs_3.maf  --destdir /dir/to/temp/fasta/1_vs_2_vs_3.fa --file1 /dir/to/filtered/maf/1_3.maf  --p1 50
 ```
 If we had more genomes for alignments we would just repeated steps 2 and 3 for each genome.
 
@@ -43,7 +44,7 @@ where --srcdir is directory where filtered maf files are located, --p1 is comma 
 
 --file2 is input tab separated text file in the following format:  Genome_Alias_Name   Genome_fasta_file
 
-one line for each genome, for our example genomes.txt could be like:
+one line per genome. In our example, genomes.txt would be like:
 ```bash
 Genome1 /dir/to/fasta/files/g1.fa
 Genome2 /dir/to/fasta/files/g2.fa
