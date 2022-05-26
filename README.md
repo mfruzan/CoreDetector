@@ -1,7 +1,12 @@
 # MultipleSequenceAlignment
 Mutliple Sequence Alignment Pipeline for Larger Bacterial and Fungal Genomes. 
 
-Input: Fasta File of whole genomes. For example we have 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. Here we can arbitrarily choose genome 1 as query and the rest of genomes as subjects.
+Input: Fasta Files of genomes. For example we have 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. Here we can arbitrarily choose genome 1 as query and the rest of genomes as subjects. Then create a text file called 'genomes.txt' that each line contains genome alias name followed by full path to its fasta file separated by a space or Tab. In our example, genomes.txt would be like:
+```bash
+Genome1 /dir/to/fasta/files/g1.fa
+Genome2 /dir/to/fasta/files/g2.fa
+Genome3 /dir/to/fasta/files/g3.fa
+```
 
 Step 1: Piarwise alignment between genome 1 and 2 using any tools that generates MAF format as output, here we used lastz (http://www.bx.psu.edu/miller_lab/dist/README.lastz-1.02.00/README.lastz-1.02.00a.html), genome 1 as query and genome 2 as subject ,allowing 10% mistmatch and 5% gap:
 ```bash
@@ -44,9 +49,4 @@ where --srcdir is directory where filtered maf files are located, --p1 is comma 
 
 --file2 is input tab separated text file in the following format:  Genome_Alias_Name   Genome_fasta_file
 
-one line per genome. In our example, genomes.txt would be like:
-```bash
-Genome1 /dir/to/fasta/files/g1.fa
-Genome2 /dir/to/fasta/files/g2.fa
-Genome3 /dir/to/fasta/files/g3.fa
-```
+
