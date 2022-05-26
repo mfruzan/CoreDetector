@@ -7,7 +7,7 @@ Genome1 /dir/to/fasta/files/g1.fa
 Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
-
+Make sure Java and GSAlign https://github.com/hsinnan75/GSAlign are installed and their executable files are in PATH environment variable.
 Step 1: Piarwise alignment between genome 1 and 2 using any tools that generates MAF format as output, here we used lastz (http://www.bx.psu.edu/miller_lab/dist/README.lastz-1.02.00/README.lastz-1.02.00a.html), genome 1 as query and genome 2 as subject ,allowing 10% mistmatch and 5% gap:
 ```bash
 ./lastz  genome2.fa[multiple]  genome1.fa --ambiguous=n  --ambiguous=iupac  --gfextend --chain --gapped  --identity=90 --continuity=95  --format=maf  --out /dir/to/maf/1_vs_2.maf
