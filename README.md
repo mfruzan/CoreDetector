@@ -7,7 +7,7 @@ Genome1 /dir/to/fasta/files/g1.fa
 Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
-Make sure Java and GSAlign https://github.com/hsinnan75/GSAlign are installed and their executable files are in PATH environment variable.
+Make sure Java 1.8 or higher and GSAlign https://github.com/hsinnan75/GSAlign are installed and their executable files are in PATH environment variable.
 Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to this directory. Before running pipleline.sh make sure it has execute permission. Then run
 
 ```bash
@@ -16,9 +16,9 @@ Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to this di
 The first arguments points to the file was created in previous step and second argument is the path to the folder that all output files will be generated inside.
 If this folder does not exist it will be created. (both arguments are required).
 
-To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity of query and subject sequences) -ind (maximum indel length) 
+To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length) 
 
-To utilize all of CPU/Cores to speed up alignment, set -t parameter of GSAlign to the number of cores in your system.
+To utilize all of CPU/Cores, set -t parameter of GSAlign to the number of cores in your system.
 
 
 
