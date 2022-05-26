@@ -38,5 +38,5 @@ do
   #echo $id;
 done <<<$(cat $1)
 
-echo $maflist;
-java -jar ~/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1
+#echo $maflist;
+java -jar ./MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1
