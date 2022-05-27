@@ -8,7 +8,7 @@ Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
 Make sure Java 1.8 or higher and GSAlign https://github.com/hsinnan75/GSAlign are installed and their executable files are in PATH environment variable.
-Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to this directory. Before running pipleline.sh make sure it has execute permission. Then run
+Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to that folder. Before running pipleline.sh make sure it has execute permission. Then run
 
 ```bash
 ./pipeline.sh  genomes.txt  /output/folder
