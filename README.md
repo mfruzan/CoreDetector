@@ -16,7 +16,8 @@ Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to that fo
 The first arguments points to the file was created in previous step and second argument is the path to the folder that all output files will be generated inside.
 If this folder does not exist it will be created. (both arguments are required).
 
-To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length) 
+To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length).
+
 If minimap2 is used, divergence level of alignment can be set to 5%, 10% and 20% using asm5, asm10 and asm20.
 
 To utilize all of CPU/Cores, set -t parameter of GSAlign or Minimap2 to the number of cores in your system.
