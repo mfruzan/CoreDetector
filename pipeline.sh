@@ -28,7 +28,9 @@ do
     echo $queryfile;
     echo ${arr[1]};
     twin=${query}_${arr[0]}
-    GSAlign -r ${arr[1]} -q ${queryfile} -o $2/maf/${twin} -no_vcf -t 32 -idy 85 -sen -alen 50 -ind 20 -fmt 1;
+    #GSAlign -r ${arr[1]} -q ${queryfile} -o $2/maf/${twin} -no_vcf -t 32 -idy 85 -sen -alen 50 -ind 20 -fmt 1;
+    minimap2 -x asm20 --cs=long -t 64 --secondary=no  ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf
+    
     newmaf=${twin}".maf"
     java -jar ./MFbio.jar --task maf2uniquequery --srcdir $2/maf/${newmaf} --destdir $2/temp_fasta/${twin}".fa" --file1 $2/filtered_maf/${newmaf} --p1 50;
     queryfile=$2/temp_fasta/${twin}".fa";
