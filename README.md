@@ -11,7 +11,7 @@ Make sure Java 1.8 or higher is installed. If GSAlign pairwise aligner is used m
 Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to that folder. Before running pipleline.sh make sure it has execute permission. Then run
 
 ```bash
-./pipeline.sh  genomes.txt  /output/folder 20  16
+./pipeline_Minimap.sh  genomes.txt  /output/folder 20  16
 ```
 The first arguments points to the file was created in previous step and second argument is the path to the folder that all output files will be generated inside.
 If this folder does not exist it will be created. Third argument referes to divergance level and can be a numver from 1-40. Fourth argument is number of cores/CPUs(default is 4). The first three arguments are required. 
