@@ -11,16 +11,14 @@ Make sure Java 1.8 or higher is installed. If GSAlign pairwise aligner is used m
 Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to that folder. Before running pipleline.sh make sure it has execute permission. Then run
 
 ```bash
-./pipeline.sh  genomes.txt  /output/folder
+./pipeline.sh  genomes.txt  /output/folder 20  16
 ```
 The first arguments points to the file was created in previous step and second argument is the path to the folder that all output files will be generated inside.
-If this folder does not exist it will be created. (both arguments are required).
+If this folder does not exist it will be created. Third argument referes to divergance level and can be a numver from 1-40. Fourth argument is number of cores/CPUs(default is 4). The first three arguments are required. 
 
 To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length).
 
-If minimap2 is used, divergence level of alignment can be set to 5%, 10% and 20% using asm5, asm10 and asm20.
 
-To utilize all of CPU/Cores, set -t parameter of GSAlign or Minimap2 to the number of cores in your system.
 
 
 
