@@ -1,3 +1,3 @@
-Genome1	/data/ptr/ncbi_dataset/data/GCA_003171515.3/GCA_003171515.3.fna
-Genome2	/data/ptr/ncbi_dataset/data/GCA_003231415.2/GCA_003231415.2.fna
-Genome3	/data/ptr/ncbi_dataset/data/GCA_008692205.1/GCA_008692205.1.fna
+Genome1	/data/MultipleSequenceAlignment/example/GCA_003171515.3.fna
+Genome2	/data/MultipleSequenceAlignment/example/GCA_003231415.2.fna
+Genome3	/data/MultipleSequenceAlignment/example/GCA_008692205.1.fna
