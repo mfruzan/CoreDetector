@@ -3,7 +3,7 @@
 # MultipleSequenceAlignment (aka coreDetector)
 A Mutliple Sequence Alignment pipeline for small prokaryote (bacterial) to larger eukaryote genomes.
 
-coreDector is a fast new multiple genome sequence aligner that is able to identify the core-genome of evolutionary diverse genomes
+coreDetector is a fast new multiple genome sequence aligner that is able to identify the core-genome of evolutionary diverse genomes
 
 ## <a name="qstart"></a>Quick start
 
