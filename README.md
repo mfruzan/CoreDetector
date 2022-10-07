@@ -1,24 +1,94 @@
-# MultipleSequenceAlignment
-Mutliple Sequence Alignment Pipeline for Larger Bacterial and Fungal Genomes. 
+[![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
 
-Input: Fasta Files of genomes. For example we have 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. Here we can arbitrarily choose genome 1 as query and the rest of genomes as subjects. Then create a text file called 'genomes.txt' that each line contains genome alias name followed by full path to its fasta file separated by a space or Tab. In our example, genomes.txt would be like:
+# MultipleSequenceAlignment (aka coreDetector)
+A Mutliple Sequence Alignment pipeline for small prokaryote (bacterial) to larger eukaryote genomes.
+
+coreDector is a fast new multiple genome sequence aligner that is able to identify the core-genome of evolutionary diverse genomes
+
+## <a name="qstart"></a>Quick start
+
+```bash
+# download the package
+git clone https://github.com/mfruzan/MultipleSequenceAlignment.git
+
+# change directory into the MultipleSequenceAlignment directory
+cd MultipleSequenceAlignment
+
+# make sure the pipeline is executable
+chmod +x pipeline_Minimap.sh
+
+# run the example set of genomes, a directory "example_out" is created for the alignment results 
+./pipeline_Minimap.sh  genomes.txt  example_out 20  16
+```
+## Table of Contents
+
+- [Quick start](#qstart)
+- [User Guide](#userguide)
+  - [Dependencies](#depends)
+  - [Input formats](#iformat)
+  - [Options](#options)
+
+## <a name="userguide"></a>User Guide
+
+The coreDetector pipeline can be run in the current directory. 
+
+Or copy MFbio.jar and pipeline_Minimap.sh to a folder of your choice and change directory into that folder.
+
+Before running the pipleline_Minimap.sh make sure it has execute permission.
+
+Ensure you change the path in pipeline_Minimap.sh using a text editor. 
+
+For example:
+
+If you sudo copy MFbio.jar and pipeline_Minimap.sh into an executable bin PATH "/usr/local/bin/".
+Make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar"
+before you do this.
+
+```bash
+
+sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
+
+```
+
+## <a name="depends"></a>Dependencies
+
+Make sure Java 1.8 or higher is installed. 
+If GSAlign pairwise aligner is used make sure GSAlign https://github.com/hsinnan75/GSAlign is installed and its executable files are in PATH environment variable. 
+
+If Minimap2 aligner is used make sure minimap2 https://lh3.github.io/minimap2/minimap2.html and K8 javascript engine https://github.com/attractivechaos/k8 are installed and their exutable files are in system path.
+
+## <a name="iformat"></a>Input formats
+
+Input: is a text file that lists of the name and full path to the FASTA files for each genome. 
+
+For example 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. 
+
+The genomes.txt file would a line for each genome as following.
+
 ```bash
 Genome1 /dir/to/fasta/files/g1.fa
 Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
-Make sure Java 1.8 or higher is installed. If GSAlign pairwise aligner is used make sure GSAlign https://github.com/hsinnan75/GSAlign is installed and its executable files are in PATH environment variable. If Minimap2 aligner is used make sure minimap2 https://lh3.github.io/minimap2/minimap2.html and K8 javascript engine https://github.com/attractivechaos/k8 are installed and their exutable files are in system path.
-Then copy MFbio.jar and pipeline.sh to a folder of your choice and CD to that folder. Before running pipleline.sh make sure it has execute permission. Then run
+Here we can arbitrarily choose genome 1 as the query and the remainder genomes become the subjects. 
+For example create a text file called 'genomes.txt', each line represents a genome
+
+Each line contains an alias name for followed by the full path to its fasta file separated by a space or Tab. 
+
+## <a name="options"></a>Options
 
 ```bash
 ./pipeline_Minimap.sh  genomes.txt  /output/folder 20  16
 ```
-The first arguments points to the file was created in previous step and second argument is the path to the folder that all output files will be generated inside.
-If this folder does not exist it will be created. Third argument referes to divergance level and can be a numver from 1-40. Fourth argument is number of cores/CPUs(default is 4). The first three arguments are required. 
+First arguments points to the file that was created in previous
+ 
+Second argument is the path to the folder that all output files will be generated inside. If this folder does not exist it will be created. 
 
-To change GSAlign arguments just edit pipeline.sh file and save it. You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length).
+Third argument referes to divergance level and can be a numver from 1-40. 
 
+Fourth argument is number of cores/CPUs(default is 4). The first three arguments are required. 
 
-
+To change GSAlign arguments just edit pipeline.sh file and save it. 
+You can change -t (number of threads) -alen (minimum alignment length) -idy (minimum identity between query and subject) -ind (maximum indel length).
 
 
