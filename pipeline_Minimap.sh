@@ -12,7 +12,7 @@ mkdir -p "$2/filtered_maf"
 
 if [[ -z $3 ]]
 then
-  echo "Third argument missing (please specify divergance level, between 5 and 40)."
+  echo "Third argument missing (please specify divergance level, between 1 and 40)."
   exit 1
 fi
 
