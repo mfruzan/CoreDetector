@@ -55,7 +55,7 @@ sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 Make sure Java 1.8 or higher is installed. 
 If GSAlign pairwise aligner is used make sure GSAlign https://github.com/hsinnan75/GSAlign is installed and its executable files are in PATH environment variable. 
 
-If Minimap2 aligner is used make sure minimap2 https://lh3.github.io/minimap2/minimap2.html and K8 javascript engine https://github.com/attractivechaos/k8 are installed and their exutable files are in system path.
+If Minimap2 aligner is used make sure minimap2 https://lh3.github.io/minimap2/minimap2.html and K8 javascript engine https://github.com/attractivechaos/k8 are installed and their exutable files are in system path or PATH variable.
 
 ## <a name="iformat"></a>Input formats
 
@@ -84,7 +84,7 @@ First arguments points to the file that was created in previous
  
 Second argument is the path to the folder that all output files will be generated inside. If this folder does not exist it will be created. 
 
-Third argument referes to divergance level and can be a numver from 1-40. 
+Third argument referes to divergance level and can be a number from 1-40. 
 
 Fourth argument is number of cores/CPUs(default is 4). The first three arguments are required. 
 
