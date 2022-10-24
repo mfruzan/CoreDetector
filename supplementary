@@ -1,0 +1,19 @@
+Experiment 1) Run 
+Experiment 2) Analyze 12 Drosopila genomes:
+ Running CoreDetector
+ Running parsnp:
+ Running ProgressiveCactus:
+ Make sure you update TOIL directory to a directory that has enough space:
+   export TOIL_WORKDIR=/path/to/large/space
+   cactus /Path/to/cactus_output /path/to/seq.txt  /flymsa.hal
+ Now use halStats to generate phylogenetics tree from hal file:
+ halStats  /flymsa.hal
+ Output is as below:
+ hal v2.1
+(Drosophila_simulans:1,Drosophila_melanogaster:1,Drosophila_sechellia:1,Drosophila_yakuba:1,Drosophila_erecta:1,Drosophila_ananassae:1,Drosophila_pseudoobscura:1,Drosophila_persimilis:1,Drosophila_willistoni:1,Drosophila_virilis:1,Drosophila_mojavensis:1,Drosophila_grimshawi:1)Anc0;
+
+   
+Experminet 3)Analyze 34 Rodent genomes:
+  Running CoreDetector
+  Running Skmer
+  Running ProgressiveCactus: 
