@@ -1,16 +1,70 @@
 Experiment 1) Run 
 Experiment 2) Analyze 12 Drosopila genomes:
- Running CoreDetector
+ Running CoreDetector:
+ 
+  
  Running parsnp:
+ time ./parsnp -r ! -d /dir/To/fasta/files -p 32 -c -P 1500000000 -o /output/dir
+ Output error after 54 minutes as below:
+ |->[ERROR]: aligned regions cover less than 1% of reference genome, something is not right.. please adjust params and rerun. If problem persists please contact developers (treangen@gmail.com)
+ 
  Running ProgressiveCactus:
  Make sure you update TOIL directory to a directory that has enough space:
    export TOIL_WORKDIR=/path/to/large/space
-   cactus /Path/to/cactus_output /path/to/seq.txt  /flymsa.hal
+   time ./cactus /Path/to/cactus_output /path/to/seq.txt  /flymsa.hal
+
+seq.txt file looks like below:
+Drosophila_simulans /sim.fasta
+Drosophila_melanogaster /mel.fasta
+Drosophila_sechellia /sec.fasta
+Drosophila_yakuba /yak.fasta
+Drosophila_erecta /ere.fasta
+Drosophila_ananassae /ana.fasta
+Drosophila_pseudoobscura /pse.fasta
+Drosophila_persimilis /per.fasta
+Drosophila_willistoni /wil.fasta
+Drosophila_virilis /vir.fasta
+Drosophila_mojavensis /moj.fasta
+Drosophila_grimshawi /gri.fasta
+
+Finished after 35 hours.   
  Now use halStats to generate phylogenetics tree from hal file:
  halStats  /flymsa.hal
  Output is as below:
  hal v2.1
 (Drosophila_simulans:1,Drosophila_melanogaster:1,Drosophila_sechellia:1,Drosophila_yakuba:1,Drosophila_erecta:1,Drosophila_ananassae:1,Drosophila_pseudoobscura:1,Drosophila_persimilis:1,Drosophila_willistoni:1,Drosophila_virilis:1,Drosophila_mojavensis:1,Drosophila_grimshawi:1)Anc0;
+Now convert hal to maf format:
+./hal2maf /flymsa.hal /cactusflymsa.maf
+Analyze maf file the output is :
+records written:1269 
+Total Written Alignment Length(bp):88243
+N50: 269
+
+
+Running phylonium:
+time ./phylonium mel.fasta  sec.fasta sim.fasta yak.fasta ere.fasta ana.fasta pse.fasta per.fasta wil.fasta vir.fasta moj.fasta gri.fasta > phylip.mat
+phylip.mat looks like this:
+12
+mel  0.0000e+00  6.2399e-03  5.5364e-03  1.0499e-02  1.0489e-02  2.9236e-02  5.7531e-02  5.5857e-02  3.1325e-02  4.7716e-02  4.9600e-02  4.7692e-02
+sec  6.2399e-03  0.0000e+00  3.1064e-03  1.0384e-02  1.0393e-02  2.9611e-02  5.7590e-02  5.5715e-02  3.2149e-02  4.9628e-02  5.0892e-02  4.9056e-02
+sim  5.5364e-03  3.1064e-03  0.0000e+00  1.0028e-02  9.6022e-03  2.8914e-02  5.7505e-02  5.6123e-02  3.2182e-02  4.9583e-02  5.1130e-02  4.8309e-02
+yak  1.0499e-02  1.0384e-02  1.0028e-02  0.0000e+00  9.1752e-03  2.9912e-02  5.8470e-02  5.6719e-02  3.1602e-02  4.9361e-02  5.1454e-02  4.9947e-02
+ere  1.0489e-02  1.0393e-02  9.6022e-03  9.1752e-03  0.0000e+00  3.0191e-02  5.9533e-02  5.7875e-02  3.2362e-02  5.0229e-02  5.2114e-02  5.0069e-02
+ana  2.9236e-02  2.9611e-02  2.8914e-02  2.9912e-02  3.0191e-02  0.0000e+00  5.8826e-02  5.7016e-02  3.2026e-02  5.0326e-02  5.3547e-02  5.0742e-02
+pse  5.7531e-02  5.7590e-02  5.7505e-02  5.8470e-02  5.9533e-02  5.8826e-02  0.0000e+00  1.1500e-02  4.5837e-02  7.1057e-02  7.2606e-02  7.0363e-02
+per  5.5857e-02  5.5715e-02  5.6123e-02  5.6719e-02  5.7875e-02  5.7016e-02  1.1500e-02  0.0000e+00  4.3313e-02  6.6244e-02  6.7558e-02  6.5238e-02
+wil  3.1325e-02  3.2149e-02  3.2182e-02  3.1602e-02  3.2362e-02  3.2026e-02  4.5837e-02  4.3313e-02  0.0000e+00  2.9627e-02  3.1094e-02  3.0362e-02
+vir  4.7716e-02  4.9628e-02  4.9583e-02  4.9361e-02  5.0229e-02  5.0326e-02  7.1057e-02  6.6244e-02  2.9627e-02  0.0000e+00  2.7043e-02  2.7150e-02
+moj  4.9600e-02  5.0892e-02  5.1130e-02  5.1454e-02  5.2114e-02  5.3547e-02  7.2606e-02  6.7558e-02  3.1094e-02  2.7043e-02  0.0000e+00  3.1974e-02
+gri  4.7692e-02  4.9056e-02  4.8309e-02  4.9947e-02  5.0069e-02  5.0742e-02  7.0363e-02  6.5238e-02  3.0362e-02  2.7150e-02  3.1974e-02  0.0000e+00
+
+Now install mattools from https://github.com/EvolBioInf/mattools
+./mat nj phylip.mat
+The output is phylogenetics tree in newick format as below:
+(((Drosophila_melanogaster:0.003026,(Drosophila_sechellia:0.001828,Drosophila_simulans:1.2788e-03)100:1.3090e-03)100:0.001712,(Drosophila_ananassae:0.015175,((Drosophila_pseudoobscura:0.007133,Drosophila_persimilis:4.3670e-03)100:0.030782,((Drosophila_grimshawi:0.014247,(Drosophila_virilis:0.012432,Drosophila_mojavensis:1.4611e-02)100:1.7932e-03)100:0.009804,Drosophila_willistoni:5.7760e-03)100:4.8668e-03)100:6.3374e-03)100:9.3183e-03)95:0.001054,Drosophila_erecta:4.7021e-03,Drosophila_yakuba:4.4731e-03);
+
+
+
 
    
 Experminet 3)Analyze 34 Rodent genomes:
