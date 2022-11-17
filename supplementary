@@ -1,5 +1,73 @@
-Experiment 1) Run 
+#############
+Experiment 1) Analysis of 27 fungal pathogen (Ptr) genomes
+#############
+
+Directory Ptr genomes:
+ptr/DW7.genome.fna
+ptr/GCA_000149985.1.fna	Pt-1C-BFP
+ptr/GCA_003171515.3.fna M4
+ptr/GCA_003171545.1.fna ARCrossB10
+ptr/GCA_003231325.2.fna Ptr134
+ptr/GCA_003231345.1.fna	Ptr5213
+ptr/GCA_003231355.1.fna	Ptr11137
+ptr/GCA_003231365.1.fna	Ptr239
+ptr/GCA_003231415.2.fna	DW5
+ptr/GCA_003231425.2.fna	Ptr86-124
+ptr/GCA_008692205.1.fna	V0001
+ptr/GCA_018492725.1.fna	ARCrossB10v2
+ptr/GCA_022544795.1.fna	Alg130
+ptr/GCA_022544805.1.fna	Alg215
+ptr/GCA_022578365.1.fna	T205
+ptr/GCA_022578395.1.fna	T199
+ptr/GCA_022788405.1.fna	EW4-4
+ptr/GCA_022788415.1.fna	SN001A
+ptr/GCA_022788425.1.fna	SN002B
+ptr/GCA_022788435.1.fna	EW7m1
+ptr/GCA_022788445.1.fna	SN001C
+ptr/GCA_022788505.1.fna	EW306-2-1
+ptr/GCA_022788515.1.fna	CC142
+ptr/GCA_022813025.1.fna	Biotrigo9-1
+ptr/GCA_022813065.1.fna	L13-192
+ptr/GCA_022837075.1.fna	Ptr90-2
+ptr/SD20.genome.fna
+
+Running phylonium:
+  
+/usr/bin/time -v phylonium -b 100 -t 16 -v ptr/* &> phylonium_ptr.txt
+
+User time (seconds): 42.87
+System time (seconds): 38.95
+Elapsed (wall clock) time (h:mm:ss or m:ss): 0:26.78
+Maximum resident set size (kbytes): 3135796
+
+((((((DW7:0.00003,DW5:0.00003):0.00011,(((M4:0.00009,Alg215:0.00009):0.00002,V0001:0.00011):0.00002,((Ptr134:0.00012,(Ptr11137:0.00011,Ptr239:0.00011):0.00001):0.00001,Ptr5213:0.00012):0.00001):0.00001):0.00001,(((Pt-1C-BFP:0.00011,(ARCrossB10:0.00004,ARCrossB10v2:0.00004):0.00007):0.00002,(Ptr86-124:0.00012,Biotrigo9-1:0.00012):0.00001):0.00001,(((EW4-4:0.00010,(SN001C:0.00004,CC142:0.00004):0.00006):0.00002,EW7m1:0.00012):0.00001,((SN001A:0.00008,SN002B:0.00008):0.00003,EW306-2-1:0.00012):0.00002):0.00001):0.00001):0.00006,L13-192 :0.00020):0.00007,(Alg130:0.00010,(T205:0.00007,T199:0.00007):0.00004):0.00016):0.00099,(Ptr90-2:0.00046,SD20:0.00046):0.00079);
+ 
+Running parsnp:
+
+/usr/bin/time -v parsnp -r ! -d ptr -p 16 -P 61000000000 --verbose &> ptr.log
+
+User time (seconds): 4731.08
+System time (seconds): 386.56
+Elapsed (wall clock) time (h:mm:ss or m:ss): 47:31.20
+Maximum resident set size (kbytes): 57934588
+
+((Pt-1C-BFP:0.030111495,(ARCrossB10:0.000725282,ARCrossB10v2:0.000000005)1.000:0.009131949)1.000:0.009151922,((L13-192 :0.000839896,Biotrigo9-1:0.000000005)1.000:0.018349328,((((SD20:0.121634781,Ptr90-2:0.069672138)1.000:0.975283247,(T199:0.008920380,(T205:0.007747596,Alg130:0.009982138)1.000:0.002489951)1.000:0.050158285)1.000:0.009971009,(DW5:0.000009269,DW7:0.000188489)1.000:0.020201877)1.000:0.006079762,(((M4:0.009065674,Alg215:0.009688859)1.000:0.009751548,(Ptr239:0.010327575,V0001:0.013442618)1.000:0.004540371)1.000:0.003622329,(Ptr11137:0.016657137,(Ptr5213:0.014138296,Ptr134:0.022974970)1.000:0.006837888)1.000:0.003903821)0.810:0.002240127)1.000:0.005324087)0.990:0.003219396,(Ptr86-124:0.015861706,((SN001A:0.010563118,(EW306-2-1:0.014965848,SN002B:0.006463687)1.000:0.004768299)1.000:0.006384112,(EW7m1:0.014258299,(EW4-4:0.008241354,(('GCA_022788445.1.fna.ref':0.0,SN001C:0.0):0.001795244,CC142:0.001581154)1.000:0.009669646)1.000:0.006727149)1.000:0.002565941)1.000:0.003233247)1.000:0.003207640);
+
+Running CoreDetector:
+
+/usr/bin/time -v "pipeline_Minimap.sh ptr_genomes.txt coredector_ptr27 10"
+        
+User time (seconds): 1170.68
+System time (seconds): 128.98
+Elapsed (wall clock) time (h:mm:ss or m:ss): 12:42.83
+Maximum resident set size (kbytes): 35751904
+Exit status: 0
+
+((((Alg130:0.00005,T199:0.00005):0.00000,T205:0.00005):0.00021,(((((((((SN002B:0.00005,EW306-2-1:0.00005):0.00002,SN001A:0.00007):0.00001,(((CC142:0.00002,SN001C:0.00002):0.00003,EW4-4:0.00005):0.00002,EW7m1:0.00006):0.00001):0.00001,(Ptr86-124:0.00007,(ARCrossB10v2:0.00003,ARCrossB10:0.00003):0.00005):0.00001):0.00000,((((Ptr239:0.00005,V0001:0.00005):0.00001,(M4:0.00005,Alg215:0.00005):0.00002):0.00001,Ptr5213:0.00007):0.00001,(Biotrigo9-1:0.00002,L13-192 :0.00002):0.00006):0.00001):0.00000,Ptr11137:0.00009):0.00003,(DW5:0.00005,DW7:0.00005):0.00007):0.00008,Pt-1C-BFP:0.00019):0.00006,Ptr134:0.00025):0.00001):0.00082,(SD20:0.00033,Ptr90-2:0.00033):0.00075);
+
+############# 
 Experiment 2) Analyze 12 Drosopila genomes:
+#############
  Running CoreDetector:
  ./pipeline_Minimap.sh  /path/to/genomes.txt  /output/folder   40   32
 
@@ -65,11 +133,10 @@ Now install mattools from https://github.com/EvolBioInf/mattools
 The output is phylogenetics tree in newick format as below:
 (((Drosophila_melanogaster:0.003026,(Drosophila_sechellia:0.001828,Drosophila_simulans:1.2788e-03)100:1.3090e-03)100:0.001712,(Drosophila_ananassae:0.015175,((Drosophila_pseudoobscura:0.007133,Drosophila_persimilis:4.3670e-03)100:0.030782,((Drosophila_grimshawi:0.014247,(Drosophila_virilis:0.012432,Drosophila_mojavensis:1.4611e-02)100:1.7932e-03)100:0.009804,Drosophila_willistoni:5.7760e-03)100:4.8668e-03)100:6.3374e-03)100:9.3183e-03)95:0.001054,Drosophila_erecta:4.7021e-03,Drosophila_yakuba:4.4731e-03);
 
+#############
+Experminet 3) Analyze 34 Rodent genomes:
+#############
 
-
-
-   
-Experminet 3)Analyze 34 Rodent genomes:
 Running CoreDetector:
   time ./pipeline.sh 34genomes_noindex.txt Minimap_2 40 32
 finished after 64 minutes
