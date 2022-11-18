@@ -1,3 +1,3 @@
-Genome1	/data/MultipleSequenceAlignment/example/GCA_003171515.3.fna
-Genome2	/data/MultipleSequenceAlignment/example/GCA_003231415.2.fna
-Genome3	/data/MultipleSequenceAlignment/example/GCA_008692205.1.fna
+Genome1	example/GCA_003171515.3.fna
+Genome2	example/GCA_003231415.2.fna
+Genome3	example/GCA_008692205.1.fna

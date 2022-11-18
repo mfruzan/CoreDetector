@@ -1,5 +1,20 @@
 #!/bin/bash
 
+if [ "$1" == "-h" ]; then
+  echo ""
+  echo "CoreDetector pipeline: for further help see https://github.com/mfruzan/MultipleSequenceAlignment/"
+  echo ""
+  echo -e "Usage:\n      ./pipeline_Minimap.sh <genome_list> <out_dir> <divergence> <ncpus>\n"
+  echo -e "Mandatory options:\n\
+	genome_list\tText file lists genome names and paths to FASTA files\n\
+	out_dir\t\tnamed directory will be created\n\
+	divergence\tlevel of genome divergence, int between 1 and 40\n"
+  echo -e "Optional:\n\
+	cpus\t\tdefault is 4 cpus\n\
+	-h\t\tPrint Help (this message) and exit\n"
+  exit 0
+fi
+
 # Make sure a directory is given as the second parameter
 if [[ -z $2 ]]
 then

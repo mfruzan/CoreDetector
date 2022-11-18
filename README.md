@@ -18,7 +18,7 @@ cd MultipleSequenceAlignment
 chmod +x pipeline_Minimap.sh
 
 # run the example set of genomes, a directory "example_out" is created for the alignment results 
-./pipeline_Minimap.sh  genomes.txt  example_out 20  16
+./pipeline_Minimap.sh  example/genomes.txt  example_out 20  16
 ```
 ## Table of Contents
 
