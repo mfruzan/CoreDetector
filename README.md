@@ -84,19 +84,19 @@ Each line contains an alias name for followed by the full path to its fasta file
 ```
 > * First argument is the list of genomes in a text file which points to the FASTA sequences. See example/genome.txt
 > * Second argument is a string to create a new output folder or the path to an existing folder. 
-	>> Note: If this folder in the path does not exist it will be created. 
+>	###### Note: If this folder in the path does not exist it will be created. 
 > * Third argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
 > * Fourth argument (optional) is the number of cores/CPUs (default is 4). 
-	>> Note the first three arguments are required. 
+>	###### Note the first three arguments are required. 
 
 #### pipeline using GSAlign 
 For the GSAlign pipeline the following GSAlign arguments can be edited and saved in a unix text editor.   
 
 > You can change:
 >
->> -t (number of threads) 
->> -alen (minimum alignment length) 
->> -idy (minimum identity between query and subject) 
+> -t (number of threads) 
+> -alen (minimum alignment length) 
+> -idy (minimum identity between query and subject) 
 > -ind (maximum indel length)
 
 
