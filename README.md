@@ -53,9 +53,9 @@ sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 ## <a name="depends"></a>Dependencies
 
 Make sure Java 1.8 or higher is installed. 
-If GSAlign pairwise aligner is used make sure GSAlign https://github.com/hsinnan75/GSAlign is installed and its executable files are in PATH environment variable. 
+If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinnan75/GSAlign) is installed and its executable files are in PATH environment variable. 
 
-If Minimap2 aligner is used make sure minimap2 https://lh3.github.io/minimap2/minimap2.html and K8 javascript engine https://github.com/attractivechaos/k8 are installed and their exutable files are in system path or PATH variable.
+If Minimap2 aligner is used make sure minimap2 (https://lh3.github.io/minimap2/minimap2.html) and K8 javascript engine (https://github.com/attractivechaos/k8) are installed and their executable files are in system path or PATH variable.
 
 ## <a name="iformat"></a>Input formats
 
