@@ -66,7 +66,7 @@ do
        echo "BWT index specified.";
       minimap2 -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no  ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
     else
-       echo "no index file";
+       #echo "no index file";
        if (( $divergance <= 5 )) 
        then
          minimap2 -x asm5 --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
