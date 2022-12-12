@@ -94,4 +94,15 @@ do
 done <<<$(cat $1)
 
 #echo $maflist;
-java -jar -Xmx100g ~/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1
+#get 80% of system available memroy in Gbyte for java
+mem=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
+echo "available memory(Gb)"${mem};
+mem=${mem%.*}
+mem=$(($mem))
+mem=$(($mem*80/100))
+if (($mem < 1))
+then
+ mem=1
+fi
+
+java -jar -Xmx${mem}g ~/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1
