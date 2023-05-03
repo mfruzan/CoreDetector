@@ -1,0 +1,563 @@
+---
+title: "CoreDetector MGA"
+author: "Paula Moolhuijzen"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+
+```{r path, echo=FALSE, message=F, warning=F}
+getwd()
+setwd(getwd())
+print(getwd())
+```
+
+```{r load, echo=FALSE, message=FALSE, warning=FALSE}
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+#BiocManager::install("ggtree")
+#BiocManager::install("treeio")
+library(ape)
+library(ggplot2)
+library(ggtree)
+library(phangorn)
+library(dplyr)
+library(treeio)
+library(TreeTools)
+library("GSEABase")
+library(ggpubr)
+library(purrr)
+library(RColorBrewer)
+library(stringr)
+```
+
+
+Phylogenic tree comparison Fungal pathogens
+
+```{r}
+# Meta file
+meta <- read.table('fungi_meta.txt', sep='\t', header = TRUE)
+
+# Load tree 1 CoreDetector
+core_ptr <- read.tree('manuscript/fungi_coredetector_unrooted.nwk')
+is.rooted(core_ptr)
+core_ptr.sort <- SortTree(core_ptr, how="cladesize", order = TipLabels(core_ptr))
+tree1 <- midpoint(core_ptr.sort)
+plot(tree1)
+```
+
+
+
+```{r}
+# Load tree 2 Parsnp
+parsnp_ptr <- read.tree("manuscript/fungi_parsnp_unrooted.nwk") # unrooted tree
+is.rooted(parsnp_ptr)
+parsnp_ptr.sort <- SortTree(parsnp_ptr, how="cladesize", order = TipLabels(parsnp_ptr))
+tree2 <- midpoint(parsnp_ptr.sort) # 
+plot(tree2)
+
+```
+
+
+```{r, fig.height=9, fig.width=12}
+pdf(file="compare_tree1_tree2.pdf", height=9, width = 12)
+comparePhylo(tree1, tree2, plot = TRUE, force.rooted = FALSE)
+dev.off()
+```
+
+
+```{r}
+# Load tree 3 Phylonium
+phylonium_ptr <- read.tree("manuscript/fungi_phylonium_unrooted.nwk")
+
+is.rooted(phylonium_ptr)
+phylonium_ptr.sort <- SortTree(phylonium_ptr, how="cladesize", order = TipLabels(phylonium_ptr))
+tree3 <- midpoint(phylonium_ptr.sort)
+plot(tree3)
+```
+
+
+```{r, fig.height=9, fig.width=12}
+pdf(file="compare_tree1_tree3.pdf", height=9, width = 12)
+comparePhylo(tree1, tree3, plot = TRUE, force.rooted = FALSE)
+dev.off()
+```
+
+
+```{r, fig.height=9, fig.width=12}
+pdf(file="compare_tree2_tree3.pdf", height=9, width = 12)
+comparePhylo(tree2, tree3, plot = TRUE, force.rooted = FALSE)
+dev.off()
+```
+
+
+```{r, fig.width=14, fig.height=8}
+
+t1 <-ggtree(tree1, branch.length="none", ladderize=FALSE )  %<+%  meta + geom_tiplab(size =9)
+
+t1 <- t1 + geom_hilight(node=c(34), fill="darkviolet") + 
+  geom_hilight(node=c(45), fill="tan") + 
+  geom_hilight(node=c(30), fill="blue") + coord_cartesian(clip = 'off') +
+  theme_tree2(plot.margin=margin(6, 140, 6, 6))
+t1
+
+```
+
+
+```{r, fig.width=14, fig.height=8}
+
+t2 <- ggtree(tree2, branch.length="none",ladderize=FALSE)  %<+%  meta + geom_tiplab(size =9)
+
+t2 <- t2 + geom_hilight(node=c(45), fill="darkviolet") + #52
+  geom_hilight(node=c(40), fill="tan") + #38
+  geom_hilight(node=c(32), fill="blue") + coord_cartesian(clip = 'off') +
+  theme_tree2(plot.margin=margin(6, 140, 6, 6)) #46
+
+t2
+```
+
+
+```{r, fig.width=14, fig.height=8}
+
+t3 <- ggtree(tree3, branch.length="none",ladderize=FALSE)  %<+%  meta + geom_tiplab(size=9) 
+
+t3 <- t3 + geom_hilight(node=c(34), fill="darkviolet") + 
+  geom_hilight(node=c(51), fill="tan") + 
+  geom_hilight(node=c(43), fill="blue") + coord_cartesian(clip = 'off') +
+  theme_tree2(plot.margin=margin(12, 140, 6, 6))
+
+t3 
+```
+
+
+```{r, fig.height=10, fig.width=30}
+t1 +t2 +t3 
+ggsave("tree_clades.pdf",height=10,width=40)
+```
+
+Phylogenic tree comparison fly genomes
+```{r}
+
+# fly 
+flycore_ur <- read.tree("manuscript/fly-short-label/fly_coredetector_unrooted.nwk") # 
+is.rooted(flycore_ur)
+flycore_rt <- read.tree("manuscript/fly-short-label/fly_coredetector_rooted.nwk") #  
+is.rooted(flycore_rt)
+
+flyphy_ur <- read.tree("manuscript/fly_phylonium_unrooted.nwk") # unrooted tree
+is.rooted(flyphy_ur)
+flyphy_rt <- read.tree("manuscript/fly_phylonium_rooted.nwk") #  
+is.rooted(flyphy_rt)
+
+flypcactus_ur <- read.tree("manuscript/fly-short-label/fly_progressive_cactus_unrooted.nwk") # 
+is.rooted(flypcactus_ur)
+flypcactus_rt <- read.tree("manuscript/fly-short-label/fly_progressive_cactus_rooted.nwk") #  
+is.rooted(flypcactus_rt)
+
+flygt_ur <- read.tree("manuscript/fly-short-label/fly_groundtruth_unrooted.nwk") # 
+is.rooted(flygt_ur)
+flygt_rt <- read.tree("manuscript/fly-short-label/fly_groundtruth_rooted.nwk") #  
+is.rooted(flygt_rt)
+```
+
+```{r}
+#https://www.r-bloggers.com/2021/07/three-ways-to-check-and-fix-ultrametric-phylogenies/
+is.ultrametric(flyphy_rt)
+tre <- flyphy_rt
+N <- Ntip(tre)
+root_node <- N + 1
+root_to_tip <- dist.nodes(tre)[1:N, root_node]
+min_tip <- min(root_to_tip)
+max_tip <- max(root_to_tip)
+(max_tip - min_tip) / max_tip
+var(root_to_tip)
+tre_extend <- tre
+age_difference <- max(root_to_tip) - root_to_tip
+tip_edges <- tre_extend$edge[, 2] <= Ntip(tre_extend)
+tre_extend$edge.length[tip_edges] <- tre_extend$edge.length[tip_edges] + age_difference
+is.ultrametric(tre_extend)
+flyphy_rt <- tre_extend
+```
+
+
+
+```{r, fig.height=8, fig.width=30}
+
+flycore_rt.sort <- SortTree(flycore_rt, how="cladesize", order = TipLabels(flycore_rt))
+#flycore_ur.sort <- midpoint(flycore_ur.sort)
+fcr <- ggtree(flycore_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=8) 
+
+flygt_rt.sort <- SortTree(flygt_rt, how="cladesize", order = TipLabels(flygt_rt))
+#flygt_ur.sort <- midpoint(flygt_ur.sort)
+fgr <- ggtree(flygt_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=8) 
+
+flyphy_rt.sort <- SortTree(flyphy_rt, how="cladesize", order = TipLabels(flyphy_rt))
+fphyr <- ggtree(flyphy_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=8)
+
+flypc_rt.sort <- SortTree(flypcactus_rt, how="cladesize", order = TipLabels(flypcactus_rt))
+fpcr <- ggtree(flypc_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=8)
+
+fgr + fcr + fphyr + fpcr
+ggsave("fly_trees.pdf",height=10,width=40)
+#fgu
+```
+
+
+```{r}
+comparePhylo(flygt_rt.sort, flycore_rt.sort, plot = TRUE, force.rooted = FALSE)
+
+```
+
+
+```{r}
+comparePhylo(flygt_rt.sort, flyphy_rt.sort, plot = TRUE, force.rooted = FALSE)
+
+```
+
+```{r}
+comparePhylo(flygt_rt.sort, flypc_rt.sort, plot = TRUE, force.rooted = FALSE)
+```
+
+
+Phylogenic tree comparison rodent genomes
+
+```{r}
+# Meta file
+meta <- read.table('rodent_meta', sep='\t', header = TRUE)
+
+# fly 
+rodcore_ur <- read.tree("manuscript/rodent_coredetector_unrooted.nwk") # unrooted tree
+is.rooted(rodcore_ur)
+rodcore_rt <- read.tree("manuscript/rodent_coredetector_rooted.nwk") #  
+is.rooted(rodcore_rt)
+
+
+rodgt_ur <- read.tree("manuscript/rodent_groundtruth_unrooted.nwk") # unrooted tree
+is.rooted(rodgt_ur)
+rodgt_rt <- read.tree("manuscript/rodent_groundtruth_rooted.nwk") #  
+is.rooted(rodgt_rt)
+
+rodskm_ur <- read.tree("manuscript/rodent_skmer_unrooted.nwk") # unrooted tree
+is.rooted(rodskm_ur)
+rodskm_rt <- read.tree("manuscript/rodent_skmer_rooted.nwk") #  
+is.rooted(rodskm_rt)
+
+
+```
+
+```{r}
+
+is.ultrametric(rodskm_rt)
+tre <- rodskm_rt
+N <- Ntip(tre)
+root_node <- N + 1
+root_to_tip <- dist.nodes(tre)[1:N, root_node]
+min_tip <- min(root_to_tip)
+max_tip <- max(root_to_tip)
+(max_tip - min_tip) / max_tip
+var(root_to_tip)
+tre_extend <- tre
+age_difference <- max(root_to_tip) - root_to_tip
+tip_edges <- tre_extend$edge[, 2] <= Ntip(tre_extend)
+tre_extend$edge.length[tip_edges] <- tre_extend$edge.length[tip_edges] + age_difference
+is.ultrametric(tre_extend)
+rodskm_rt <- tre_extend
+```
+
+```{r, fig.height=40, fig.width=90}
+rodcore_rt.sort <- SortTree(rodcore_rt, how="cladesize", order = TipLabels(rodcore_rt))
+rcr <- ggtree(rodcore_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=12)
+
+rodgt_rt.sort <- SortTree(rodgt_rt, how="cladesize", order = TipLabels(rodgt_rt))
+rgtr <- ggtree(rodgt_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=12)
+
+rodskm_rt.sort <- SortTree(rodskm_rt, how="cladesize", order = TipLabels(rodskm_rt))
+rskr <- ggtree(rodskm_rt.sort, branch.length="none",ladderize=FALSE)  + geom_tiplab(size=12)
+
+rgtr + rcr + rskr
+ggsave("rodent_tree.pdf",height=60,width=135, limitsize = FALSE)
+```
+
+
+```{r}
+comparePhylo(rodgt_rt.sort, rodcore_rt.sort, plot = TRUE, force.rooted = FALSE)
+```
+
+
+```{r}
+comparePhylo(rodgt_rt.sort, rodskm_rt.sort, plot = TRUE, force.rooted = FALSE)
+```
+
+
+### Core gene ids mapped to Gene Ontologies (GO) fungal pathogens
+
+# CoreDetector core (10,599 genes)
+```{r}
+
+ptrgo <- read.table("geneid_goid_goslim.txt") # read in M4 locus GO terms
+core_ids <- readLines("coredetector_exonerate_M4_core_locustags.list") # read in M4 core locus  identifiers
+core <- ptrgo[ptrgo$V1 %in% core_ids,]
+myids <- core$V2
+
+myCollection <- GOCollection(myids)
+
+fl <- system.file("extdata", "goslim_plant.obo", package="GSEABase")
+slim <- getOBOCollection(fl)
+
+
+```
+
+
+Cellular components
+
+```{r, fig.height=8, fig.width=6}
+
+cc.slim <- goSlim(myCollection, slim, "CC")
+cc.slim <-subset(cc.slim, Percent >= 1)
+cc.slim <- subset(cc.slim, cc.slim$Term != "cellular_component")
+
+n <- length(unique(cc.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+cc.slim$Ratio <- cc.slim$Percent
+cc.slim$Term = str_wrap(cc.slim$Term,30)
+cc.slim$GO <- "CC"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+ccplot <- ggplot(cc.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = cc.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO cellular component")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+ccplot
+```
+
+Molecular functions
+
+```{r, fig.height=8, fig.width=6}
+
+mf.slim <- goSlim(myCollection, slim, "MF")
+mf.slim <-subset(mf.slim, Percent >= 1)
+mf.slim <- subset(mf.slim, mf.slim$Term != "molecular_function")
+
+n <- length(unique(mf.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+mf.slim$Ratio <- mf.slim$Percent
+mf.slim$Term = str_wrap(mf.slim$Term,30)
+mf.slim$GO <- "MF"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+mfplot <- ggplot(mf.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = mf.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO molecular function")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+mfplot
+```
+
+Biological processes
+
+```{r,fig.height=8, fig.width=6}
+
+bp.slim <- goSlim(myCollection, slim, "BP")
+bp.slim <-subset(bp.slim, Percent >= 1)
+bp.slim <- subset(bp.slim, bp.slim$Term != "biological_process")
+
+n <- length(unique(bp.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+bp.slim$Ratio <- bp.slim$Percent
+bp.slim$Term = str_wrap(bp.slim$Term,30)
+bp.slim$GO <- "BP"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+bpplot <- ggplot(bp.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = bp.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO biological process")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+bpplot
+```
+
+
+```{r, fig.width=16, fig.height=8}
+
+theme_set(theme_pubr())
+
+figure <- ggarrange(bpplot, ccplot, mfplot,
+                    labels = c("A", "B", "C"),
+                    ncol = 3, nrow = 1)
+
+pdf("CoreDetector-Core-GOSlim.pdf", width=16, height=8,)
+figure
+dev.off()
+```
+
+# Unique core genes identified by CoreDetector (3,392 genes)
+
+```{r}
+
+ptrgo <- read.table("geneid_goid_goslim.txt") # read in M4 locus GO terms
+core_uids <- readLines("coredetector_uniquelocus.list") # read in M4 core locus  identifiers
+core <- ptrgo[ptrgo$V1 %in% core_uids,]
+myids <- core$V2
+
+myCollection <- GOCollection(myids)
+
+fl <- system.file("extdata", "goslim_plant.obo", package="GSEABase")
+slim <- getOBOCollection(fl)
+
+
+```
+
+Cellular components
+
+```{r, fig.height=8, fig.width=6}
+
+cc.slim <- goSlim(myCollection, slim, "CC")
+cc.slim <-subset(cc.slim, Percent >= 1)
+cc.slim <- subset(cc.slim, cc.slim$Term != "cellular_component")
+
+n <- length(unique(cc.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+cc.slim$Ratio <- cc.slim$Percent
+cc.slim$Term = str_wrap(cc.slim$Term,30)
+cc.slim$GO <- "CC"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+ccplot <- ggplot(cc.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = cc.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent unique core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO cellular component")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+ccplot
+```
+
+Molecular functions
+
+```{r, fig.height=8, fig.width=6}
+
+mf.slim <- goSlim(myCollection, slim, "MF")
+mf.slim <-subset(mf.slim, Percent >= 1)
+mf.slim <- subset(mf.slim, mf.slim$Term != "molecular_function")
+
+n <- length(unique(mf.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+mf.slim$Ratio <- mf.slim$Percent
+mf.slim$Term = str_wrap(mf.slim$Term,30)
+mf.slim$GO <- "MF"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+mfplot <- ggplot(mf.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = mf.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent unique core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO molecular function")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+mfplot
+```
+
+Biological processes
+
+```{r,fig.height=8, fig.width=6}
+
+bp.slim <- goSlim(myCollection, slim, "BP")
+bp.slim <-subset(bp.slim, Percent >= 1)
+bp.slim <- subset(bp.slim, bp.slim$Term != "biological_process")
+
+n <- length(unique(bp.slim$Term))
+set <-  colorRampPalette(brewer.pal(12, "Paired"))(n)
+
+bp.slim$Ratio <- bp.slim$Percent
+bp.slim$Term = str_wrap(bp.slim$Term,30)
+bp.slim$GO <- "BP"
+
+#pdf(file="cellular-component.pdf", height = 12, width = 8)
+
+bpplot <- ggplot(bp.slim, aes(GO)) + 
+  theme(axis.text=element_text(size=12), # text=element_text(family="Calibri"), 
+        axis.title=element_text(size=14,face="bold"), legend.text=element_text(size=12), 
+        legend.title=element_text(size=12, face="bold"), strip.text = element_text(size = 12),
+        strip.background=element_rect(fill="white"), panel.background = element_blank(), 
+        panel.grid = element_line(color="grey90"), legend.position = "right", panel.border = element_rect(fill = NA)) +
+  geom_bar(data = bp.slim, 
+           aes(y = Ratio, fill = Term), stat = "identity", position="stack") +
+  xlab("GO slim") + ylab("Percent unique core GO terms ") +
+  guides(fill=guide_legend(nrow=n, title="GO biological process")) + geom_hline(yintercept = 0,colour = "grey90") +
+  scale_fill_manual(values = set)
+
+bpplot
+```
+
+
+
+```{r, fig.width=16, fig.height=8}
+
+theme_set(theme_pubr())
+
+figure <- ggarrange(bpplot, ccplot, mfplot,
+                    labels = c("A", "B", "C"),
+                    ncol = 3, nrow = 1)
+
+pdf("CoreDetector-UniqueCore-GOSlim.pdf", width=16, height=8,)
+figure
+dev.off()
+```
+
+
+```{r}
+sessionInfo()
+
+```
+
+

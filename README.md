@@ -1,9 +1,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
 
-# MultipleSequenceAlignment (aka coreDetector)
-A Mutliple Sequence Alignment pipeline for small prokaryote (bacterial) to larger eukaryote genomes.
-
-coreDetector is a fast new multiple genome sequence aligner that is able to identify the core-genome of evolutionary diverse genomes
+# CoreDetector Multiple Genome Aligner
+CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of evolutionary diverse genomes for larger and more evolutionary diverse genomes. 
 
 ## <a name="qstart"></a>Quick start
 

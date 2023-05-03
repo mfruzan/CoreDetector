@@ -1,0 +1,28 @@
+Isolate	Source
+M4	Australia
+V0001	Australia
+Ptr239	Australia
+Ptr134	Australia
+Ptr11137	Australia
+Ptr5213	Australia
+CC142	Europe
+SN001C	Europe
+SN002B	Europe
+EW306-2-1	Europe
+SN001A	Europe
+EW7m1	Europe
+EW4-4	Europe
+DW5	USA
+Pt-1C-BFP	USA
+Pt-1C-BFP_ref	USA
+ARCrossB10	USA
+ARCrossB10_v2	USA
+L13-192	USA
+Alg130	North Africa
+Alg215	North Africa
+T199	North Africa
+T205	North Africa
+T205_ref	North Africa
+Biotrigo9-1	Brazil
+Ptr86-124	Canada
+Ptr90-2	Canada
