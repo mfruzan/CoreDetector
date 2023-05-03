@@ -1,7 +1,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
 
 # CoreDetector Multiple Genome Aligner
-CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of evolutionary diverse genomes for larger and more evolutionary diverse genomes. 
+CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. 
 
 ## <a name="qstart"></a>Quick start
 
