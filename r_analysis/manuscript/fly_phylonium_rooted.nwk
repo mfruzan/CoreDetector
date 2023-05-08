@@ -1,4 +1,1 @@
-(((ana:0.01479,((ere:0.00459,yak:0.00459):0.00053,(mel:0.00294,
-(sec:0.00155,sim:0.00155):0.00139):0.00217):0.00967):0.00799,
-((gri:0.01478,(moj:0.01352,vir:0.01352):0.00126):0.00040,
-wil:0.01518):0.00759):0.00700,(per:0.00575,pse:0.00575):0.02402);
+(((Drosophila_ananassae:0.01479,((Drosophila_erecta:0.00459,Drosophila_yakuba:0.00459):0.00053,(Drosophila_melanogaster:0.00294,(Drosophila_sechellia:0.00155,Drosophila_simulans:0.00155):0.00139):0.00217):0.00967):0.00799,((Drosophila_grimshawi:0.01478,(Drosophila_mojavensis:0.01352,Drosophila_virilis:0.01352):0.00126):0.00040,Drosophila_willistoni:0.01518):0.00759):0.00700,(Drosophila_persimilis:0.00575,Drosophila_pseudoobscura:0.00575):0.02402);
