@@ -20,7 +20,10 @@ cd CoreDetector
 chmod +x pipeline_Minimap.sh
 ```
 
-#### Step 3. Set path to CoreDetector Java file lines 73 and 82 in pipeline_Minimap.sh
+#### Step 3. Set path in the shell script to run CoreDetector Java file lines 73 and 82 in pipeline_Minimap.sh
+
+Edit the path on lines 73 and 82 in pipeline_Minimap.sh to CoreDetector Java file 'MFbio.jar'
+
 
 #### Step 4. Run pipeline on a list of the genome names and paths 
 ```bash
@@ -37,28 +40,40 @@ chmod +x pipeline_Minimap.sh
 
 ## <a name="userguide"></a>User Guide
 
-The coreDetector pipeline can be run in the current directory. 
+The CoreDetector [Manual](https://github.com/mfruzan/CoreDetector/blob/master/Manual.md) explains installation, usage and further analysis examples. 
 
-Or copy MFbio.jar and pipeline_Minimap.sh to a folder of your choice and change directory into that folder.
+The CoreDetector pipeline can be run: 
 
-Before running the pipleline_Minimap.sh make sure it has execute permission.
+* in the current directory
+* in a folder of your choice, just copy the MFbio.jar and pipeline_Minimap.sh files to  the new folder and change directory into the new folder.
+* from anywhere by copying MFbio.jar and pipeline_Minimap.sh to an executable bin PATH
 
-Important: Ensure you change the path in pipeline_Minimap.sh using a text editor. 
 
-For example: Copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/". Make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar"
-before you do this.
+**Important**: Ensure you change the path in pipeline_Minimap.sh using a text editor. 
+
+For example: If you copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/", make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar".
 
 ```bash
 sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 
 ```
 
+Before running the pipleline_Minimap.sh make sure it has execute permission.
+
+```bash
+# make sure the pipeline is executable
+chmod +x pipeline_Minimap.sh
+```
+
+
 ## <a name="depends"></a>Dependencies
 
 Make sure Java 1.8 or higher is installed. 
-If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinnan75/GSAlign) is installed and its executable files are in PATH environment variable. 
 
 If Minimap2 aligner is used make sure minimap2 (https://lh3.github.io/minimap2/minimap2.html) and K8 javascript engine (https://github.com/attractivechaos/k8) are installed and their executable files are in system path or PATH variable.
+
+If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinnan75/GSAlign) is installed and its executable files are in PATH environment variable. 
+
 
 ## <a name="iformat"></a>Input formats
 
