@@ -22,9 +22,9 @@ The analysis of the core-genome alignments of conserved sequence is important to
 
 ### <a name="depends"></a>Dependencies
 
-CoreDetector depends on the fast aligner Minimap2 for ...
+CoreDetector depends on the fast and efficient pairwise alignment tool Minimap2.
 
-**`Step 1.`** Download precompiled binaries of the latest Minimap2 aligner version. 
+**`Step 1.`** Download the precompiled binaries of the latest Minimap2 aligner version. 
 
 [![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
 
@@ -45,13 +45,13 @@ curl -L https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26_x6
 **`Step 4.`** Download the CoreDetector package from GitHub
 
 ```bash 
-git clone https://github.com/mfruzan/MultipleSequenceAlignment.git
+git clone https://github.com/mfruzan/CoreDetector.git
 ```
 
-**`Step 5.`** Change directory into the MultipleSequenceAlignment directory
+**`Step 5.`** Change directory into the CoreDetector directory
 
 ```bash
-cd MultipleSequenceAlignment
+cd CoreDetector
 ```
 
 **`Step 6.`** Make sure the pipeline is executable by changing the file permissions.
@@ -67,7 +67,7 @@ The CoreDetector pipeline can be run in the current directory.
 ./pipeline_Minimap.sh
 ```
 
-Or you can alternatively copy MFbio.jar and pipeline_Minimap.sh to a folder of your choice that is in your executable PATH.
+Or you can alternatively copy the files MFbio.jar and pipeline_Minimap.sh to a folder of your choice that is in your executable PATH.
 
 For example:
 You can sudo copy MFbio.jar and pipeline_Minimap.sh into an executable bin PATH "/usr/local/bin/".
@@ -79,7 +79,7 @@ sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 **`Step 8.`** 
 Ensure you change the path to the executables in pipeline_Minimap.sh using a text editor. 
 
-To find the full path of the current directory where the executables are use the pwd command
+To find the full path of the current directory or where the executables are you can use the pwd command
 
 ```bash
 pwd .
@@ -97,11 +97,11 @@ For the 'example' the path would be:
 
 ## <a name="iformat"></a> 2. Data input formats for CoreDetector
 
-CoreDetector requires fasta formatted genome files (input 1) and a text file that lists of the name and full path to the FASTA files for each genome (input 2). 
+CoreDetector requires two data inputs. The first is fasta formatted genome files (input 1) and the second is a text file that lists of the name and full path to the FASTA files for each genome (input 2). 
 
-Published fasta formatted genomes can be downloaded using NCBI tools datasets and dataformats
+Published fasta formatted genomes can be downloaded using NCBI tools datasets and dataformats. Install these tools and we will download a data set of genomes in the next section.
 
-**`Step 1.`** Install tools to download genomes (input 1) from NCBI
+**`Step 1.`** Download and install NCBI tools datasets and dataformat to use in the next section.
 
 ```bash
 curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets'
@@ -121,21 +121,23 @@ Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
 
-We have provided in our GitHub example/genomes.txt
-Here genome 1 becomes the query and the remainder genomes become the subjects. 
+We have provided in our GitHub an file that lists the genomes we will use in the next section "example/genomes.txt". In this file genome 1 becomes the query and the remainder genomes become the subjects. 
 
 
 ## <a name="options"></a>3. CoreDetector usage
 
 After CoreDetector is setup, the Minimap2 pipeline can be run.
 
-**`Step 1.`** View CoreDetector options (arguments)
+**`Step 1.`** Let us first view the CoreDetector options (arguments)
 
 The required and mandatoy options for the Minimap2 pipeline (pipeline_Minimap.sh) can be  viewed using the help (-h) argument as follows.
 
-```
+```bash
 pipeline_Minimap.sh -h
+```
+Output:
 
+```
 CoreDetector pipeline: for further help see https://github.com/mfruzan/MultipleSequenceAlignment/
 
 Usage:
@@ -160,7 +162,7 @@ Note the argument order is required and the first three arguments are mandatory:
 > * Fourth argument (optional) is the number of cores/CPUs (default is 4).
 
 
-**`Step 2.`**  Download the fasta formatted genomes
+**`Step 2.`**  Download the fasta formatted genomes from NCBI 
 
 To see how CoreDetector works we will apply it to a set of 23 fungal genomes using the NCBI datasets tool to download the genomes based on a single BioProject number PRJNA315205
 
@@ -170,29 +172,40 @@ cd genomes
 datasets download genome accession PRJNA315205 --filename bioproject_dataset.zip
 unzip bioproject_dataset.zip 
 ls genomes/ncbi_dataset/data/
+```
+
+Output:
+
+```
 GCA_003171515.3  GCA_003231365.1  GCA_022544805.1  GCA_022788425.1  GCA_022813025.1
 GCA_003171545.1  GCA_003231415.2  GCA_022578365.1  GCA_022788435.1  GCA_022813065.1
 GCA_003231325.2  GCA_003231425.2  GCA_022578395.1  GCA_022788445.1  GCA_022837075.1
 GCA_003231345.1  GCA_008692205.1  GCA_022788405.1  GCA_022788505.1  assembly_data_report.jsonl
 GCA_003231355.1  GCA_022544795.1  GCA_022788415.1  GCA_022788515.1  dataset_catalog.json
 ```
+
 **`Step 3.`** Run the CoreDetector pipeline using the list of genomes
 
-Note: The genomes.txt is supplied in the example folder
+Note: The genomes.txt is supplied in the example folder. You can move the file to the current path.
 
 ```bash
+mv example/genomes.txt .
 ./pipeline_Minimap.sh  genomes.txt  output 20  16
+ls output/
 ```
 
 After CoreDetector has completed (~5mins) you will see the final alignment length and find the results in the output folder. The concatinated_msa.fa file contains the extracted fasta alignment that can then be used for further analysis.
 
-```bash
+
+Output:
+
+```
 ...
 start writing to output file...
 Length of Alignment 33764393
 Total Query Length 32082566
 Done!
-ls output/
+
 concatinated_msa.fa  filtered_maf  maf  msa.maf  temp_fasta
 ```
 
@@ -203,17 +216,23 @@ concatinated_msa.fa  filtered_maf  maf  msa.maf  temp_fasta
 
 Now that we have the core alignment in fasta format we can conduct phylogenetic analysis. You can use a tool of your preference, but here we will use the tool Phylip.
 
-**`Step 1.`** First convert the concatinated_msa.fa to phylip format using fasta\_to\_phylip.py (~1 min). Change to the output directory and run the following 
+**`Step 1.`** First convert the concatinated_msa.fa to phylip format using fasta\_to\_phylip.py (~1 min). We will move into the output directory and run the following 
 
 ```bash
-sudo cp example/fasta_to_phylip.py /usr/local/bin/
+sudo cp scripts/fasta_to_phylip.py /usr/local/bin/
 cd output/
 fasta_to_phylip.py &>log.convert
 ls concatinated_msa.*
+```
+
+Output:
+
+
+```
 concatinated_msa.fa  concatinated_msa.phylip
 ```
 
-**`Step 2.`** Phylip download and installation instuctions can be found here https://evolution.genetics.washington.edu/phylip/getme-new1.html
+**`Step 2.`** The download and installation instuctions for Phylip can be found here https://evolution.genetics.washington.edu/phylip/getme-new1.html
 
 On ubuntu 20.04+ you can install Phylip using apt-get:
 
@@ -226,6 +245,9 @@ sudo apt-get install phylip
 ```bash
 cp concatinated_msa.phylip infile
 phylip dnadist infile
+```
+
+```
 Nucleic acid sequence Distance Matrix program, version 3.697
 
 Settings for this run:
@@ -334,13 +356,13 @@ figtree outtree
 ```
 ### <a name="comp"></a>Comparing trees
 
-The CoreDetector phylogenetic tree can then be compared to trees generated using other tools (e.g. Phylonium and ParSNP). We have generated trees based on 29 fungal genomes used in our CoreDector manuscript (reference to be added) available in the cloned folder r_analysis/manuscript
+The CoreDetector phylogenetic tree can then be compared to trees generated using other tools (e.g. Phylonium and parsnp). We have generated trees based on 29 fungal genomes, from our CoreDector manuscript, available in the cloned folder r_analysis/manuscript
 
 You will be using RStudio for this analysis. If you do not have it already, you can follow the instructions to download, install and launch RStudio 
 
 https://rstudio-education.github.io/hopr/starting.html
 
-**`Step 1`** In the CoreDetector open r_analysis/MGA-Analysis.Rmd 
+**`Step 1`** In the CoreDetector directory open r_analysis/MGA-Analysis.Rmd with RStudio.
 
 **`Step 2`** Run the code chunks **"1. set the path to files"** and **"2. load the libraries required"**.
 
