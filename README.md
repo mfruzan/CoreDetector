@@ -5,16 +5,25 @@ CoreDetector is a new fast and flexible program that is able to identify the cor
 
 ## <a name="qstart"></a>Quick start
 
-```bash
-# download the package
-git clone https://github.com/mfruzan/MultipleSequenceAlignment.git
 
-# change directory into the MultipleSequenceAlignment directory
-cd MultipleSequenceAlignment
+#### Step 1. Download and install MiniMap2
+[![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
+
+#### Step 2. Download CoreDetector
+```bash
+git clone https://github.com/mfruzan/CoreDetector.git
+
+# change directory into the CoreDetector directory
+cd CoreDetector
 
 # make sure the pipeline is executable
 chmod +x pipeline_Minimap.sh
+```
 
+#### Step 3. Set path to CoreDetector Java file lines 73 and 82 in pipeline_Minimap.sh
+
+#### Step 4. Run pipeline on a list of the genome names and paths 
+```bash
 # run the example set of genomes, a directory "example_out" is created for the alignment results 
 ./pipeline_Minimap.sh  example/genomes.txt  example_out 20  16
 ```
@@ -34,16 +43,12 @@ Or copy MFbio.jar and pipeline_Minimap.sh to a folder of your choice and change 
 
 Before running the pipleline_Minimap.sh make sure it has execute permission.
 
-Ensure you change the path in pipeline_Minimap.sh using a text editor. 
+Important: Ensure you change the path in pipeline_Minimap.sh using a text editor. 
 
-For example:
-
-If you sudo copy MFbio.jar and pipeline_Minimap.sh into an executable bin PATH "/usr/local/bin/".
-Make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar"
+For example: Copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/". Make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar"
 before you do this.
 
 ```bash
-
 sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 
 ```
@@ -57,25 +62,27 @@ If Minimap2 aligner is used make sure minimap2 (https://lh3.github.io/minimap2/m
 
 ## <a name="iformat"></a>Input formats
 
-Input: is a text file that lists of the name and full path to the FASTA files for each genome. 
+#### Input 1: Genome sequences in FASTA format
 
-For example 3 fungal genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa. 
 
-The genomes.txt file would a line for each genome as following.
+For example 3 genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa.
+
+
+#### Input 2: Is a text file that lists of the name and full path to the FASTA files for each genome. 
+
+The text file has a line for each genome. For example in a text file called 'genomes.txt', each line represents a genome. Each line contains an alias name followed by the full path to its FASTA file separated by a space or Tab. 
 
 ```bash
-Genome1 /dir/to/fasta/files/g1.fa
-Genome2 /dir/to/fasta/files/g2.fa
-Genome3 /dir/to/fasta/files/g3.fa
+Genome1 /dir/to/fasta/files/genome1.fa
+Genome2 /dir/to/fasta/files/genome2.fa
+Genome3 /dir/to/fasta/files/genome3.fa
 ```
 Here we can arbitrarily choose genome 1 as the query and the remainder genomes become the subjects. 
-For example create a text file called 'genomes.txt', each line represents a genome
 
-Each line contains an alias name for followed by the full path to its fasta file separated by a space or Tab. 
 
 ## <a name="options"></a>Options
 
-#### pipeline using  Minimap2
+#### CoreDetector pipeline using  Minimap2
 
 ```bash
 ./pipeline_Minimap.sh  genomes.txt  /output/folder 20  16

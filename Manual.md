@@ -121,7 +121,7 @@ Genome2 /dir/to/fasta/files/g2.fa
 Genome3 /dir/to/fasta/files/g3.fa
 ```
 
-We have provided in our GitHub an file that lists the genomes we will use in the next section "example/genomes.txt". In this file genome 1 becomes the query and the remainder genomes become the subjects. 
+We have provided in our GitHub a file that lists the genomes we will use in the next section "example/genomes.txt". In this file genome 1 becomes the query and the remainder genomes become the subjects. 
 
 
 ## <a name="options"></a>3. CoreDetector usage
@@ -216,7 +216,7 @@ concatinated_msa.fa  filtered_maf  maf  msa.maf  temp_fasta
 
 Now that we have the core alignment in fasta format we can conduct phylogenetic analysis. You can use a tool of your preference, but here we will use the tool Phylip.
 
-**`Step 1.`** First convert the concatinated_msa.fa to phylip format using fasta\_to\_phylip.py (~1 min). We will move into the output directory and run the following 
+**`Step 1.`** First convert the concatinated_msa.fa to phylip format using fasta\_to\_phylip.py (~1 min).  
 
 ```bash
 sudo cp scripts/fasta_to_phylip.py /usr/local/bin/
@@ -299,6 +299,9 @@ Done.
 ```bash
 mv outfile infile 
 phylip neighbor infile
+```
+
+```
 Neighbor-Joining/UPGMA method version 3.697
 
 Settings for this run:
@@ -356,7 +359,7 @@ figtree outtree
 ```
 ### <a name="comp"></a>Comparing trees
 
-The CoreDetector phylogenetic tree can then be compared to trees generated using other tools (e.g. Phylonium and parsnp). We have generated trees based on 29 fungal genomes, from our CoreDector manuscript, available in the cloned folder r_analysis/manuscript
+The CoreDetector phylogenetic tree can then be compared to trees generated using other tools (e.g. Phylonium and parsnp). We have generated trees based on 29 fungal genomes, from our CoreDetector manuscript, available in the cloned folder r_analysis/manuscript
 
 You will be using RStudio for this analysis. If you do not have it already, you can follow the instructions to download, install and launch RStudio 
 
@@ -371,15 +374,15 @@ https://rstudio-education.github.io/hopr/starting.html
 **`Step 4`** We will now compare the first two trees by running the code chunk for **"4. Compare the generated trees from CoreDetector and Parsnp"** (using ape package) which returns a detatiled report of this comparison. 
 
 ![Figure 1](./r\_analysis/compare\_tree1\_tree2.png "Figure 1") 
-**Figure 1.** CoreDetector tree (tree 1) with splits incommon to the Parsnp generated tree and Parsnp tree (tree 2) shows splits incommon to the CoreDetector generated tree.
+**Figure 1.** CoreDetector tree (tree 1) with splits incommon to the Parsnp generated tree (left) and Parsnp tree (tree 2) shows splits incommon to the CoreDetector generated tree (right).
 
 
 **`Step 5`** We next compare the first and third tree set by running the code chunk for **"5. Compare the generated trees from CoreDetector and Phylonium"** (Figure 2).
 
 ![Figure 2](./r\_analysis/compare\_tree1\_tree3.png "Figure 2") 
-**Figure 2.** CoreDetector tree (tree 1) with splits incommon to the Phylonium generated tree and the Phylonium tree (tree 3) shows splits incommon to CoreDetector generated tree.
+**Figure 2.** CoreDetector tree (tree 1) with splits incommon to the Phylonium generated tree (left) and the Phylonium tree (tree 3) shows splits incommon to CoreDetector generated tree (right).
 
-**`Step 6`** This final step plots the three trees including the geographic origin of the isolates highlighted by running **6. For each tree highlight the geographic origin of the isolates**. Figure 3 shows the three trees and the geographic source of the isolates highlighted.
+**`Step 6`** This final step plots the three trees including the geographic origin of the isolates highlighted by running **"6. For each tree highlight the geographic origin of the isolates"**. Figure 3 shows the three trees and the geographic source of the isolates highlighted.
 
 ![Figure 3](./r\_analysis/tree\_clades.png "Figure 3")
 **Figure 3.** *Pyrenophora tritici-repentis* fungal pathogen phylogenetic tree topology comparisons. Trees generated from CoreDetector (left), Parsnp (centre) and Phylonium (right) show three groups related to geographic locations, Europe (violet), Australia (blue) and North Africa (tan). The Ptr isolate identifiers are shown in all three trees.
