@@ -20,7 +20,7 @@ cd CoreDetector
 chmod +x pipeline_Minimap.sh
 ```
 
-#### Step 3. Set path in the shell script to run CoreDetector Java file lines 73 and 82 in pipeline_Minimap.sh
+#### Step 3. Set path in the pipeline_Minimap.sh shell script lines 73 and 82 to run CoreDetector  
 
 Edit the path on lines 73 and 82 in pipeline_Minimap.sh to CoreDetector Java file 'MFbio.jar'
 
