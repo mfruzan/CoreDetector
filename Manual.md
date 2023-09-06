@@ -2,7 +2,7 @@
 
 ### Mario Fruzangohar & Paula Moolhuijzen
 ##### mario.fruzangohar@adelaide.edu.au
-##### 31-80-2023
+##### 31-08-2023
 
 The analysis of the core-genome alignments of conserved sequence is important to measure genetic changes between population individuals and show not only the evolutionary relationships within a population but provide further insight into core gene functions and how these may shift over time or geography. This is however complicated by the limitation of current tools containing the functionality to process larger and more diverse speices. CoreDetector is a fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. This document explains how to install and use CoreDetector, for core genome alignment, phylogenetic tree reconstruction and gives an example for the comparison of phylogenetic trees.
 
@@ -359,7 +359,7 @@ https://rstudio-education.github.io/hopr/starting.html
 
 **`Step 6`** This final step plots the three trees including the geographic origin of the isolates highlighted by running **6. For each tree highlight the geographic origin of the isolates**. Figure 3 shows the three trees and the geographic source of the isolates highlighted.
 
-![Figure 3](./r\_analysis/tree\_clades.pdf "Figure 3")
+![Figure 3](./r\_analysis/tree\_clades.png "Figure 3")
 **Figure 3.** *Pyrenophora tritici-repentis* fungal pathogen phylogenetic tree topology comparisons. Trees generated from CoreDetector (left), Parsnp (centre) and Phylonium (right) show three groups related to geographic locations, Europe (violet), Australia (blue) and North Africa (tan). The Ptr isolate identifiers are shown in all three trees.
 
 
