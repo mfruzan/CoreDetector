@@ -12,12 +12,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
+1. Set the path 
 
 ```{r path, echo=FALSE, message=F, warning=F}
-getwd()
 setwd(getwd())
 print(getwd())
 ```
+
+2. Load libraries
 
 ```{r load, echo=FALSE, message=FALSE, warning=FALSE}
 if (!require("BiocManager", quietly = TRUE))
@@ -34,15 +36,16 @@ library(treeio)
 library(TreeTools)
 library("GSEABase")
 library(ggpubr)
-library(purrr)
 library(RColorBrewer)
-library(stringr)
+
 ```
 
 
-Phylogenic tree comparison Fungal pathogens
+## Fungal pathogen phylogenic tree comparison 
 
-```{r}
+3. Load CoreDetector, Parsnp and Phylonium trees and set midpont root
+
+```{r loadtrees}
 # Meta file
 meta <- read.table('fungi_meta.txt', sep='\t', header = TRUE)
 
@@ -51,68 +54,54 @@ core_ptr <- read.tree('manuscript/fungi_coredetector_unrooted.nwk')
 is.rooted(core_ptr)
 core_ptr.sort <- SortTree(core_ptr, how="cladesize", order = TipLabels(core_ptr))
 tree1 <- midpoint(core_ptr.sort)
-plot(tree1)
-```
+#plot(tree1)
 
-
-
-```{r}
 # Load tree 2 Parsnp
 parsnp_ptr <- read.tree("manuscript/fungi_parsnp_unrooted.nwk") # unrooted tree
 is.rooted(parsnp_ptr)
 parsnp_ptr.sort <- SortTree(parsnp_ptr, how="cladesize", order = TipLabels(parsnp_ptr))
 tree2 <- midpoint(parsnp_ptr.sort) # 
-plot(tree2)
+#plot(tree2)
 
-```
-
-
-```{r, fig.height=9, fig.width=12}
-pdf(file="compare_tree1_tree2.pdf", height=9, width = 12)
-comparePhylo(tree1, tree2, plot = TRUE, force.rooted = FALSE)
-dev.off()
-```
-
-
-```{r}
 # Load tree 3 Phylonium
 phylonium_ptr <- read.tree("manuscript/fungi_phylonium_unrooted.nwk")
 
 is.rooted(phylonium_ptr)
 phylonium_ptr.sort <- SortTree(phylonium_ptr, how="cladesize", order = TipLabels(phylonium_ptr))
 tree3 <- midpoint(phylonium_ptr.sort)
-plot(tree3)
+#plot(tree3)
+```
+
+4. Compare the generated trees from CoreDetector and Parsnp 
+
+```{r, fig.height=9, fig.width=12}
+#pdf(file="compare_tree1_tree2.pdf", height=9, width = 12)
+comparePhylo(tree1, tree2, plot = TRUE, force.rooted = FALSE)
+#dev.off()
 ```
 
 
+5. Compare the generated trees from CoreDetector and Phylonium 
+
 ```{r, fig.height=9, fig.width=12}
-pdf(file="compare_tree1_tree3.pdf", height=9, width = 12)
+#pdf(file="compare_tree1_tree3.pdf", height=9, width = 12)
 comparePhylo(tree1, tree3, plot = TRUE, force.rooted = FALSE)
-dev.off()
+#dev.off()
 ```
 
 
-```{r, fig.height=9, fig.width=12}
-pdf(file="compare_tree2_tree3.pdf", height=9, width = 12)
-comparePhylo(tree2, tree3, plot = TRUE, force.rooted = FALSE)
-dev.off()
-```
+6. For each tree highlight the geographic origin of the isolates
 
-
-```{r, fig.width=14, fig.height=8}
+```{r, fig.width=30, fig.height=10}
 
 t1 <-ggtree(tree1, branch.length="none", ladderize=FALSE )  %<+%  meta + geom_tiplab(size =9)
 
-t1 <- t1 + geom_hilight(node=c(34), fill="darkviolet") + 
-  geom_hilight(node=c(45), fill="tan") + 
-  geom_hilight(node=c(30), fill="blue") + coord_cartesian(clip = 'off') +
+t1 <- t1 + geom_hilight(node=c(34), fill="darkviolet") +                  # Europe
+  geom_hilight(node=c(45), fill="tan") +                                  # North Africa
+  geom_hilight(node=c(30), fill="blue") + coord_cartesian(clip = 'off') + # Australia
   theme_tree2(plot.margin=margin(6, 140, 6, 6))
-t1
+# t1
 
-```
-
-
-```{r, fig.width=14, fig.height=8}
 
 t2 <- ggtree(tree2, branch.length="none",ladderize=FALSE)  %<+%  meta + geom_tiplab(size =9)
 
@@ -121,11 +110,7 @@ t2 <- t2 + geom_hilight(node=c(45), fill="darkviolet") + #52
   geom_hilight(node=c(32), fill="blue") + coord_cartesian(clip = 'off') +
   theme_tree2(plot.margin=margin(6, 140, 6, 6)) #46
 
-t2
-```
-
-
-```{r, fig.width=14, fig.height=8}
+#t2
 
 t3 <- ggtree(tree3, branch.length="none",ladderize=FALSE)  %<+%  meta + geom_tiplab(size=9) 
 
@@ -134,16 +119,14 @@ t3 <- t3 + geom_hilight(node=c(34), fill="darkviolet") +
   geom_hilight(node=c(43), fill="blue") + coord_cartesian(clip = 'off') +
   theme_tree2(plot.margin=margin(12, 140, 6, 6))
 
-t3 
-```
+#t3 
 
-
-```{r, fig.height=10, fig.width=30}
 t1 +t2 +t3 
 ggsave("tree_clades.pdf",height=10,width=40)
 ```
 
-Phylogenic tree comparison fly genomes
+## Phylogenic tree comparison fly genomes
+
 ```{r}
 
 # fly 
