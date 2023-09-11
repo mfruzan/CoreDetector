@@ -78,7 +78,7 @@ do
          minimap2 -x asm20 --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 30 )) 
        then
-         minimap2  minimap2  -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2  minimap2  -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        else
          minimap2  -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        fi
