@@ -65,7 +65,7 @@ do
     echo Genome size gb : $gb;
     if (($gb > 3))
     then
-      K_param=$((gb+1));
+      K_param=$((gb));
       I_param=$((gb+1));
     fi   
   else
