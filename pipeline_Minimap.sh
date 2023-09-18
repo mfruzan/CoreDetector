@@ -83,7 +83,7 @@ do
          minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 10 )) 
        then
-         minimap2 -x asm10 -I$I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 20 )) 
        then
          minimap2 -x asm20  -I${I_param}g  -K${K_param}g -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
