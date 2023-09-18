@@ -42,7 +42,7 @@ fi
 
 
 declare -i id=1;
-declare -i I_param=1;
+declare -i I_param=4;
 declare -i K_param=1;
 maflist="";
 query="";
@@ -62,9 +62,12 @@ do
     #set size of query file
     sz=$(ls -l ${arr[1]} | cut -d ' ' -f 5)
     gb=$((sz/1073741824))
-    K_param=$((gb+1));
-    I_param=$((gb+2));
-    echo Genome size gb : $gb;    
+    echo Genome size gb : $gb;
+    if (($gb > 3))
+    then
+      K_param=$((gb+1));
+      I_param=$((gb+1));
+    fi   
   else
     echo $queryfile;
     echo ${arr[1]};
@@ -104,7 +107,7 @@ done <<<$(cat $1)
 #echo $maflist;
 #get 80% of system available memroy in Gbyte for java
 mem=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
-echo "available memory(Gb)"${mem};
+echo available memory ${mem} gb;
 mem=${mem%.*}
 mem=$(($mem))
 mem=$(($mem*80/100))
