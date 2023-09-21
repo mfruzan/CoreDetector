@@ -42,6 +42,8 @@ fi
 
 
 declare -i id=1;
+declare -i I_param=4;
+declare -i K_param=1;
 maflist="";
 query="";
 queryfile="";
@@ -57,6 +59,15 @@ do
   then
     query=${arr[0]}
     queryfile=${arr[1]}
+    #set size of query file
+    sz=$(ls -l ${arr[1]} | cut -d ' ' -f 5)
+    gb=$((sz/1073741824))
+    echo Genome size gb : $gb;
+    if (($gb > 3))
+    then
+      K_param=$((gb+2));
+      I_param=$((gb+2));
+    fi   
   else
     echo $queryfile;
     echo ${arr[1]};
@@ -66,21 +77,21 @@ do
        echo "BWT index specified.";
       minimap2 -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no  ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
     else
-       #echo "no index file";
+       #echo "no index file, index is built on the fly.";
        if (( $divergance <= 5 )) 
        then
-         minimap2 -x asm5 --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 10 )) 
        then
-         minimap2 -x asm10 --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;       
+         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 20 )) 
        then
-         minimap2 -x asm20 --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2 -x asm20  -I${I_param}g  -K${K_param}g -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        elif (( $divergance <= 30 )) 
        then
-         minimap2  minimap2  -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2  minimap2  -I${I_param}g  -K${K_param}g -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        else
-         minimap2  -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2  -I${I_param}g  -K${K_param}g  -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
        fi
     fi
 
@@ -96,7 +107,7 @@ done <<<$(cat $1)
 #echo $maflist;
 #get 80% of system available memroy in Gbyte for java
 mem=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
-echo "available memory(Gb)"${mem};
+echo available memory ${mem} gb;
 mem=${mem%.*}
 mem=$(($mem))
 mem=$(($mem*80/100))
