@@ -74,19 +74,20 @@ tree3 <- midpoint(phylonium_ptr.sort)
 
 4. Compare the generated trees from CoreDetector and Parsnp 
 
-```{r, fig.height=9, fig.width=12}
-#pdf(file="compare_tree1_tree2.pdf", height=9, width = 12)
+```{r, fig.height=9, fig.width=12, dpi=600}
+library(jpeg)
+jpeg(filename="compare_tree1_tree2_%02d.jpeg", height=10, width = 14, units = "in", res = 600)
 comparePhylo(tree1, tree2, plot = TRUE, force.rooted = FALSE)
-#dev.off()
+dev.off()
 ```
 
 
 5. Compare the generated trees from CoreDetector and Phylonium 
 
 ```{r, fig.height=9, fig.width=12}
-#pdf(file="compare_tree1_tree3.pdf", height=9, width = 12)
+jpeg(filename="compare_tree1_tree3_%02d.jpeg", height=10, width = 14, units = "in", res = 600)
 comparePhylo(tree1, tree3, plot = TRUE, force.rooted = FALSE)
-#dev.off()
+dev.off()
 ```
 
 
@@ -122,7 +123,8 @@ t3 <- t3 + geom_hilight(node=c(34), fill="darkviolet") +
 #t3 
 
 t1 +t2 +t3 
-ggsave("tree_clades.pdf",height=10,width=40)
+
+ggsave("tree_clades.jpeg",height=10,width=40, device='jpeg', dpi=600)
 ```
 
 ## Phylogenic tree comparison fly genomes
