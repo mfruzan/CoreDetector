@@ -76,24 +76,6 @@ You can sudo copy MFbio.jar and pipeline_Minimap.sh into an executable bin PATH 
 sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
 ```
 
-**`Step 8.`** 
-Ensure you change the path to the executables in pipeline_Minimap.sh using a text editor. 
-
-To find the full path of the current directory or where the executables are you can use the pwd command
-
-```bash
-pwd .
-```
-
-Make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to the new path.
-
-For the 'example' the path would be: 
-
-```bash
-/usr/local/bin/MFbio.jar
-```
-
-
 
 ## <a name="iformat"></a> 2. Data input formats for CoreDetector
 

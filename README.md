@@ -20,12 +20,7 @@ cd CoreDetector
 chmod +x pipeline_Minimap.sh
 ```
 
-#### Step 3. Set path in the pipeline_Minimap.sh shell script lines 73 and 82 to run CoreDetector  
-
-Edit the path on lines 73 and 82 in pipeline_Minimap.sh to CoreDetector Java file 'MFbio.jar'
-
-
-#### Step 4. Run pipeline on a list of the genome names and paths 
+#### Step 3. Run pipeline on a list of the genome names and paths 
 ```bash
 # run the example set of genomes, a directory "example_out" is created for the alignment results 
 ./pipeline_Minimap.sh  example/genomes.txt  example_out 20  16
