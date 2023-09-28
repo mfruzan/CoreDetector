@@ -303,7 +303,7 @@ public class MAFProcessor {
                     }
 
                     step = 4;
-                   map.clear();
+                   
                    //---------------
                    if (hsp == null)
                        lastContigWritten = true;
