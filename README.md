@@ -96,7 +96,7 @@ Here we can arbitrarily choose genome 1 as the query and the remainder genomes b
 >	###### Note: If this folder in the path does not exist it will be created. 
 > * -d argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
 > * -n argument (optional) is the number of cores/CPUs (default is 4).
-> * -c argument (optional) enables chromosome number matching (1:enable, 0:disable, default is 0) Please note that when enabled then CoreDetector considers a contig name starts with number+[a-z] is a chromsome number, i.g. 2B, 14 followed by a white space (including characters _ or - or !) 
+> * -c argument (optional) enables chromosome number matching (1:enable, 0:disable, default is 0) Please note that when enabled then CoreDetector considers a contig name starts with a chromsome number, such as 2B or 14, followed by a white space (or characters '_' , '-' ) 
 > * -m argument (optional) sets minimum alignment length in bp (default is 200)
 >	###### Note the first three arguments are required. 
 
