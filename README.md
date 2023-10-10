@@ -89,13 +89,15 @@ Here we can arbitrarily choose genome 1 as the query and the remainder genomes b
 #### CoreDetector pipeline using  Minimap2
 
 ```bash
-./pipeline_Minimap.sh  genomes.txt  /output/folder 20  16
+./pipeline_Minimap.sh  -g genomes.txt  -o /output/folder -d 20  -n 16
 ```
-> * First argument is the list of genomes in a text file which points to the FASTA sequences. See example/genome.txt
-> * Second argument is a string to create a new output folder or the path to an existing folder. 
+> * -g argument is the list of genomes in a text file which points to the FASTA sequences. See example/genome.txt
+> * -o argument is a string to create a new output folder or the path to an existing folder. 
 >	###### Note: If this folder in the path does not exist it will be created. 
-> * Third argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
-> * Fourth argument (optional) is the number of cores/CPUs (default is 4). 
+> * -d argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
+> * -n argument (optional) is the number of cores/CPUs (default is 4).
+> * -c argument (optional) enables chromosome number matching (1:enable, 0:disable, default is 0)
+> * -m argument (optional) sets minimum alignment length in bp (default is 200)
 >	###### Note the first three arguments are required. 
 
 #### pipeline using GSAlign 
