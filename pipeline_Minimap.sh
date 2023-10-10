@@ -1,44 +1,81 @@
 #!/bin/bash
 
+while getopts g:d:n:o:m:c: option
+do 
+    case "${option}"
+        in
+        g)genome=${OPTARG};;
+        d)diverg=${OPTARG};;
+        n)ncores=${OPTARG};;
+        o)outdir=${OPTARG};;
+        m)minlen=${OPTARG};;
+        c)chrom=${OPTARG};;
+
+    esac
+done
+
+
 if [ "$1" == "-h" ]; then
   echo ""
   echo "CoreDetector pipeline: for further help see https://github.com/mfruzan/MultipleSequenceAlignment/"
   echo ""
-  echo -e "Usage:\n      ./pipeline_Minimap.sh <genome_list> <out_dir> <divergence> <ncpus>\n"
+  echo -e "Usage:\n      ./pipeline_Minimap.sh -g <genome_list> -o <out_dir> -d <divergence> -n <ncpus>  -m <minlength>  -c <chromosome>\n"
   echo -e "Mandatory options:\n\
 	genome_list\tText file lists genome names and paths to FASTA files\n\
 	out_dir\t\tnamed directory will be created\n\
 	divergence\tlevel of genome divergence, int between 1 and 40\n"
   echo -e "Optional:\n\
-	cpus\t\tdefault is 4 cpus\n\
+	ncpus\t\tdefault is 4 cpus\n\
+        minlength(Minimum alignment length)\t\tdefault is 200bp\n\
+        chromosome(chromosome matching)\t\tdefault is 0 or disabled, to enable set it to 1\n\
 	-h\t\tPrint Help (this message) and exit\n"
   exit 0
 fi
 
-# Make sure a directory is given as the second parameter
-if [[ -z $2 ]]
-then
-  echo "Second argument missing (please specify folder name)."
-  exit 1
-fi
-mkdir -p "$2/temp_fasta"
-mkdir -p "$2/maf"
-mkdir -p "$2/filtered_maf"
 
-if [[ -z $3 ]]
+if [[ -z $genome ]]
 then
-  echo "Third argument missing (please specify divergance level, between 1 and 40)."
+  echo "genomes file missing (please specify -g)."
   exit 1
 fi
 
-divergance=$(($3));
+
+
+if [[ -z $outdir ]]
+then
+  echo "output directory missing (please specify -o)."
+  exit 1
+fi
+mkdir -p "$outdir/temp_fasta"
+mkdir -p "$outdir/maf"
+mkdir -p "$outdir/filtered_maf"
+
+if [[ -z $diverg ]]
+then
+  echo "Divergence level is missing (please specify -d, between 1 and 40)."
+  exit 1
+fi
+
+divergence=$(($diverg));
 
 cores=4
-if [[ ! -z $4 ]]
+if [[ ! -z $ncores ]]
 then
-  cores=$(($4));
+  cores=$(($ncores));
 fi
 
+
+mlen=200
+if [[ ! -z $minlen ]]
+then
+  mlen=$(($minlen));
+fi
+
+chromosome=0
+if [[ ! -z $chrom ]]
+then
+  chromosome=$(($chrom));
+fi
 
 
 declare -i id=1;
@@ -47,8 +84,8 @@ declare -i K_param=1;
 maflist="";
 query="";
 queryfile="";
-lines=$(cat $1 | wc -l)
-echo Number of lines in file $1 : $lines;
+lines=$(cat $genome | wc -l)
+echo Number of lines in file $genome : $lines;
 #lines=$((lines+1));
 while read line
 do
@@ -75,34 +112,34 @@ do
     if [[ ${arr[2]} ]]
     then
        echo "BWT index specified.";
-      minimap2 -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no  ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+      minimap2 -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no  ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
     else
        #echo "no index file, index is built on the fly.";
-       if (( $divergance <= 5 )) 
+       if (( $divergence <= 5 )) 
        then
-         minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
-       elif (( $divergance <= 10 )) 
+         minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+       elif (( $divergence <= 10 )) 
        then
-         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
-       elif (( $divergance <= 20 )) 
+         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+       elif (( $divergence <= 20 )) 
        then
-         minimap2 -x asm20  -I${I_param}g  -K${K_param}g -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
-       elif (( $divergance <= 30 )) 
+         minimap2 -x asm20  -I${I_param}g  -K${K_param}g -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+       elif (( $divergence <= 30 )) 
        then
-         minimap2  minimap2  -I${I_param}g  -K${K_param}g -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2  minimap2  -I${I_param}g  -K${K_param}g -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        else
-         minimap2  -I${I_param}g  -K${K_param}g  -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$2/maf/${twin}.maf;
+         minimap2  -I${I_param}g  -K${K_param}g  -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        fi
     fi
 
     newmaf=${twin}".maf"
-    java -jar MFbio.jar --task maf2uniquequery --srcdir $2/maf/${newmaf} --destdir $2/temp_fasta/${twin}".fa" --file1 $2/filtered_maf/${newmaf} --p1 50;
-    queryfile=$2/temp_fasta/${twin}".fa";
+    java -jar /home/ubuntu/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
+    queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
   fi
   id=$((id+1));
   #echo $id;
-done <<<$(cat $1)
+done <<<$(cat $genome)
 
 #echo $maflist;
 #get 80% of system available memroy in Gbyte for java
@@ -116,4 +153,4 @@ then
  mem=1
 fi
 
-java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1
+java -jar -Xmx${mem}g /home/ubuntu/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/concatinated_msa.fa --file1 $outdir/msa.maf --file2 $genome ;
