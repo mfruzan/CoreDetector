@@ -120,28 +120,30 @@ pipeline_Minimap.sh -h
 Output:
 
 ```
-CoreDetector pipeline: for further help see https://github.com/mfruzan/MultipleSequenceAlignment/
+CoreDetector pipeline: for further help see https://github.com/mfruzan/CoreDetector.git
 
 Usage:
-      ./pipeline_Minimap.sh <genome_list> <out_dir> <divergence> <ncpus>
+      ./pipeline_Minimap.sh -g <genome_list> -o <out_dir> -d <divergence> -n <ncpus>  -m <minlength>  -c <chromosome>
 
 Mandatory options:
 	genome_list	Text file lists genome names and paths to FASTA files
 	out_dir		named directory will be created
-	divergence	level of genome divergence, int between 1 and 40
+	divergence	level of genome divergence, in between 1 and 40
 
 Optional:
-	cpus		default is 4 cpus
+   ncpus		default is 4 cpus
+   minlength(Minimum alignment length)	default is 200bp
+   chromosome(chromosome matching)		default is 0 or disabled, to enable set it to 1
 	-h		Print Help (this message) and exit
 ```
 
-Note the argument order is required and the first three arguments are mandatory:
+Note the first three arguments are mandatory:
 
 > * First argument is the list of genomes in a text file which points to the FASTA sequences. See example/genome.txt
 > * Second argument is a string to create a new output folder or the path to an existing folder. 
 >	 Note: If this folder in the path does not exist it will be created. 
 > * Third argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
-> * Fourth argument (optional) is the number of cores/CPUs (default is 4).
+
 
 
 **`Step 2.`**  Download the fasta formatted genomes from NCBI 
@@ -172,7 +174,7 @@ Note: The genomes.txt is supplied in the example folder. You can move the file t
 
 ```bash
 mv example/genomes.txt .
-./pipeline_Minimap.sh  genomes.txt  output 20  16
+./pipeline_Minimap.sh -g genomes.txt -o output -d 20  -n 16
 ls output/
 ```
 
