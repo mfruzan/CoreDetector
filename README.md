@@ -23,7 +23,7 @@ chmod +x pipeline_Minimap.sh
 #### Step 3. Run pipeline on a list of the genome names and paths 
 ```bash
 # run the example set of genomes, a directory "example_out" is created for the alignment results 
-./pipeline_Minimap.sh  example/genomes.txt  example_out 20  16
+./pipeline_Minimap.sh  -g example/genomes.txt  -o example_out -d 20  -n 16
 ```
 ## Table of Contents
 
