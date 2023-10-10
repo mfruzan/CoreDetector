@@ -17,7 +17,7 @@ done
 
 if [ "$1" == "-h" ]; then
   echo ""
-  echo "CoreDetector pipeline: for further help see https://github.com/mfruzan/MultipleSequenceAlignment/"
+  echo "CoreDetector pipeline: for further help see https://github.com/mfruzan/CoreDetector.git/"
   echo ""
   echo -e "Usage:\n      ./pipeline_Minimap.sh -g <genome_list> -o <out_dir> -d <divergence> -n <ncpus>  -m <minlength>  -c <chromosome>\n"
   echo -e "Mandatory options:\n\
