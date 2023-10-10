@@ -126,7 +126,7 @@ do
          minimap2 -x asm20  -I${I_param}g  -K${K_param}g -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        elif (( $divergence <= 30 )) 
        then
-         minimap2  minimap2  -I${I_param}g  -K${K_param}g -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+         minimap2  -I${I_param}g  -K${K_param}g -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        else
          minimap2  -I${I_param}g  -K${K_param}g  -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        fi
