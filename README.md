@@ -72,13 +72,7 @@ If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinna
 
 ## <a name="iformat"></a>Input formats
 
-#### -g: Genome sequences in FASTA format
-
-
-For example 3 genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa.
-
-
-#### Input 2: Is a text file that lists of the name and full path to the FASTA files for each genome. 
+Is a text file that lists of the name and full path to the FASTA files for each genome. 
 
 The text file has a line for each genome. For example in a text file called 'genomes.txt', each line represents a genome. Each line contains an alias name followed by the full path to its FASTA file separated by a space or Tab. 
 
