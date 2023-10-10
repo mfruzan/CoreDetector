@@ -72,7 +72,7 @@ If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinna
 
 ## <a name="iformat"></a>Input formats
 
-#### Input 1: Genome sequences in FASTA format
+#### -g: Genome sequences in FASTA format
 
 
 For example 3 genomes in 3 fasta files: genome1.fa, genome2.fa and genome3.fa.
