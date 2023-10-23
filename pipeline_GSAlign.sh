@@ -63,7 +63,7 @@ do
     fi
 
     newmaf=${twin}".maf"
-    java -jar ~/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $2/maf/${newmaf} --destdir $2/temp_fasta/${twin}".fa" --file1 $2/filtered_maf/${newmaf} --p1 50;
+    java -jar MFbio.jar --task maf2uniquequery --srcdir $2/maf/${newmaf} --destdir $2/temp_fasta/${twin}".fa" --file1 $2/filtered_maf/${newmaf} --p1 50;
     queryfile=$2/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
   fi
@@ -72,4 +72,4 @@ do
 done <<<$(cat $1)
 
 #echo $maflist;
-java -jar -Xmx100g ~/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1;
+java -jar -Xmx100g MFbio.jar --task maf2msa --srcdir $2/filtered_maf --p1 ${maflist} --destdir $2/concatinated_msa.fa --file1 $2/msa.maf --file2 $1;
