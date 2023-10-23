@@ -46,7 +46,7 @@ The CoreDetector pipeline can be run:
 
 **Important**: Ensure you change the path in pipeline_Minimap.sh using a text editor. 
 
-For example: If you copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/", make sure you change lines 73 and 82 lines in pipeline_Minimap.sh from "~/biotools/MFbio/MFbio.jar to "/usr/local/bin/MFbio.jar".
+For example: If you copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/", make sure you change lines 136 and 156 lines in pipeline_Minimap.sh from "MFbio.jar to "/usr/local/bin/MFbio.jar".
 
 ```bash
 sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
