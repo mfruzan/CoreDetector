@@ -91,9 +91,9 @@ Here we can arbitrarily choose genome 1 as the query and the remainder genomes b
 ```bash
 ./pipeline_Minimap.sh  -g genomes.txt  -o /output/folder -d 20  -n 16
 ```
-> * -g argument is the list of genomes in a text file which points to the FASTA sequences. See example/genome.txt
-> * -o argument is a string to create a new output folder or the path to an existing folder. 
->	###### Note: If this folder in the path does not exist it will be created. 
+> * -g argument is text file that contains the list of genomes which points to the FASTA sequences. See example/genome.txt
+> * -o argument is an output folder where alignment files will be written to. 
+>	###### Note: If this folder does not exist it will be created. 
 > * -d argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
 > * -n argument (optional) is the number of cores/CPUs (default is 4).
 > * -c argument (optional) enables chromosome number matching (1:enable, 0:disable, default is 0) Please note that when enabled then CoreDetector considers a contig name starts with a chromsome number, such as 2B or 14, followed by a white space (or characters '_' , '-' ) 
