@@ -22,22 +22,21 @@ The analysis of the core-genome alignments of conserved sequence is important to
 
 ### <a name="depends"></a>Dependencies
 
-CoreDetector depends on the fast and efficient pairwise alignment tool Minimap2.
+CoreDetector depends on the fast and efficient pairwise alignment tool Minimap2 and k8 javascript engine. You can install Minimap2 and k8 at different directories, 
+but we recommend to install both at the same directory.
 
-**`Step 1.`** Download the precompiled binaries of the latest Minimap2 aligner version. 
+**`Step 1.`** First change directory to where you want minimap2 and k8 being installed and then run following commands:
 
-[![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
+# install minimap2
+git clone https://github.com/lh3/minimap2
+cd minimap2 && make
+# install the k8 javascript shell
+curl -L https://github.com/attractivechaos/k8/releases/download/v0.2.4/k8-0.2.4.tar.bz2 | tar -jxf -
+cp k8-0.2.4/k8-`uname -s` k8              # or copy it to a directory on your $PATH
+#Make sure the MiniMap2 and k8 executable files are in your PATH environment variable. 
+export PATH="$PATH:`pwd`:`pwd`/misc"   
 
-or
-
-```bash
-curl -L https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26_x64-linux.tar.bz2 | tar -jxvf -
-./minimap2-2.26_x64-linux/minimap2
-```
-
-**`Step 2.`** Make sure the MiniMap2 executable files are in your PATH environment variable. 
-
-**`Step 3.`** Make sure Java 1.8 or higher is installed. 
+**`Step 2.`** Make sure Java 1.8 or higher is installed. 
 
 
 ### <a name="download"></a> Obtaining and setting up CoreDetector
