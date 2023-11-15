@@ -99,7 +99,7 @@ CoreDetector generates 2 output files in the output folder: <b>msa.maf</b> and <
 msa.maf is standard maf file that each entry of maf file contains one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome fasta file. This maf file
 is approperiate for structural variation detection.
 
-concatinated_msa.fa file is a fasta file that has one entriy for each genome file and constructed by conctainating that genomes subject line from entries of msa.maf file. 
+concatinated_msa.fa file is a fasta file that has one entry for each genome file that is constructed by concatinating that genome's subject line from all entries of msa.maf file. The name of each entry is the same as the name of genome introduced in genomes.txt input file. 
 
 ## <a name="options"></a>Options
 
