@@ -94,9 +94,11 @@ Genome3 /dir/to/fasta/files/genome3.fa
 ```
 Here we can arbitrarily choose genome 1 as the query and the remainder genomes become the subjects. 
 ## <a name="iformat"></a>Output formats
-CoreDetector generates 2 output files in the output foldr: <b>msa.maf</b> and concatinated_msa.fa 
-msa.maf is standard maf file that each entry of maf file contains one subject file for each genome. Coordinates and strandness of entries are related to the original contig from original genome fasta file. This maf file
+CoreDetector generates 2 output files in the output folder: <b>msa.maf</b> and <b>concatinated_msa.fa</b> 
+
+msa.maf is standard maf file that each entry of maf file contains one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome fasta file. This maf file
 is approperiate for structural variation detection.
+
 concatinated_msa.fa file is a fasta file that has one entriy for each genome file and constructed by conctainating that genomes subject line from entries of msa.maf file. 
 
 ## <a name="options"></a>Options
