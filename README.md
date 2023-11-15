@@ -65,7 +65,18 @@ chmod +x pipeline_Minimap.sh
 
 Make sure Java 1.8 or higher is installed. 
 
-If Minimap2 aligner is used make sure minimap2 (https://github.com/lh3/minimap2) and K8 javascript engine (https://github.com/attractivechaos/k8) are installed and their executable files are in system path or PATH variable.
+If Minimap2 aligner is used make sure minimap2 (https://github.com/lh3/minimap2) and k8 javascript engine (https://github.com/attractivechaos/k8) are installed and their executable files are in system path or PATH variable.
+In order to do that first change directory to where you want minimap2 and k8 being installed and then run following commands:
+```bash
+# install minimap2
+git clone https://github.com/lh3/minimap2
+cd minimap2 && make
+# install the k8 javascript shell
+curl -L https://github.com/attractivechaos/k8/releases/download/v0.2.4/k8-0.2.4.tar.bz2 | tar -jxf -
+cp k8-0.2.4/k8-`uname -s` k8              # or copy it to a directory on your $PATH
+export PATH="$PATH:`pwd`:`pwd`/misc"   
+```
+
 
 If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinnan75/GSAlign) is installed and its executable files are in PATH environment variable. 
 
