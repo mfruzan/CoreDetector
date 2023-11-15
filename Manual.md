@@ -26,7 +26,7 @@ CoreDetector depends on the fast and efficient pairwise alignment tool Minimap2 
 but we recommend to install both at the same directory.
 
 **`Step 1.`** First change directory to where you want minimap2 and k8 being installed and then run following commands:
-
+```bash
 # install minimap2
 git clone https://github.com/lh3/minimap2
 cd minimap2 && make
@@ -35,7 +35,7 @@ curl -L https://github.com/attractivechaos/k8/releases/download/v0.2.4/k8-0.2.4.
 cp k8-0.2.4/k8-`uname -s` k8              # or copy it to a directory on your $PATH
 #Make sure the MiniMap2 and k8 executable files are in your PATH environment variable. 
 export PATH="$PATH:`pwd`:`pwd`/misc"   
-
+```
 **`Step 2.`** Make sure Java 1.8 or higher is installed. 
 
 
