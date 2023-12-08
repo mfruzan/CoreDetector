@@ -92,7 +92,7 @@ Alg130	example/Alg130.fna
 DW5	example/DW5.fna
 M4	example/M4.fna
 ```
-Here we can arbitrarily choose genome 1 as the query and the remainder genomes become the subjects. 
+Here we can arbitrarily choose Alg130 as the query and the remainder genomes become the subjects. 
 ## <a name="iformat"></a>Output formats
 CoreDetector generates 2 output files in the output folder: <b>msa.maf</b> and <b>concatinated_msa.fa</b> 
 
