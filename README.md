@@ -88,9 +88,9 @@ Is a text file that lists of the name and full path to the FASTA files for each 
 The text file has a line for each genome. For example in a text file called 'genomes.txt', each line represents a genome. Each line contains an alias name followed by the full path to its FASTA file separated by a space or Tab. 
 
 ```bash
-Genome1 /dir/to/fasta/files/genome1.fa
-Genome2 /dir/to/fasta/files/genome2.fa
-Genome3 /dir/to/fasta/files/genome3.fa
+Alg130	example/Alg130.fna
+DW5	example/DW5.fna
+M4	example/M4.fna
 ```
 Here we can arbitrarily choose genome 1 as the query and the remainder genomes become the subjects. 
 ## <a name="iformat"></a>Output formats
