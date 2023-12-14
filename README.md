@@ -23,7 +23,7 @@ chmod +x pipeline_Minimap.sh
 #### Step 3. Run pipeline on a list of the genome names and paths 
 ```bash
 # run the example set of genomes, a directory "example_out" is created for the alignment results 
-./pipeline_Minimap.sh  -g example/genomes.txt  -o example_out -d 20  -n 16
+./pipeline_Minimap.sh  -g example/quick_genomes.txt  -o example_out -d 20  -n 16
 ```
 ## Table of Contents
 
@@ -106,7 +106,7 @@ concatinated_msa.fa file is a fasta file that has one entry for each genome file
 #### CoreDetector pipeline using  Minimap2
 
 ```bash
-./pipeline_Minimap.sh  -g genomes.txt  -o /output/folder -d 20  -n 16
+./pipeline_Minimap.sh  -g example/quick_genomes.txt  -o output_folder -d 20  -n 16
 ```
 > * -g argument is text file that contains the list of genomes which points to the FASTA sequences. See example/genome.txt
 > * -o argument is an output folder where alignment files will be written to. 
