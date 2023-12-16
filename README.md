@@ -1,33 +1,73 @@
-[![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
-
 # CoreDetector Multiple Genome Aligner
+<!-- badges -->
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+![Licence pending](https://img.shields.io/badge/licence-TBA-blue)
+![Static Badge](https://img.shields.io/badge/version-pending-80b6ff)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmfruzan%2FCoreDetector&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+
 CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. 
 
 ## <a name="qstart"></a>Quick start
+Installation and configuration of CoreDetector on Linux-based operating systems proceeds as follows.
 
+#### Step 1. Configure your `$PATH` for CoreDetector binary dependencies
+CoreDetector depends on the [Minimap2](https://github.com/lh3/minimap2) versatile pairwise aligner (and its related `paftools.js` utility), as well as the [K8 Javascript shell](https://github.com/attractivechaos/k8). The easiest way is to install these to a prepared folder on the system `$PATH` for them, so that they are always available when CoreDetector runs:
+```bash
+mkdir -p $HOME/bin
+echo "export PATH=$HOME/bin:${PATH}" >> $HOME/.bashrc && source $HOME/.bashrc
+```
 
-#### Step 1. Download and install MiniMap2
-[![GitHub Downloads](https://img.shields.io/github/downloads/lh3/minimap2/total.svg?style=social&logo=github&label=Download)](https://github.com/lh3/minimap2/releases)
+#### Step 2. Download and install Minimap2 (v2.26)
+Grab the v2.26 release of Minimap2 from its GitHub repository [here](https://github.com/lh3/minimap2/releases/tag/v2.26). Alternatively, copy-paste the below commands to automatically download, compile and configure Minimap2. (Note: this compilation requires compiler tools and the zlib development headers to be installed: on Ubuntu 22.04, you can easily install these compilation dependencies with `sudo apt-get -y install build-essential zlib1g-dev`.)
+```bash
+wget "https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26.tar.bz2"
+tar -xjf minimap2-2.26.tar.bz2
+cd minimap2-2.26 && make
+cp minimap2 misc/paftools.js $HOME/bin/
+cd ..
+```
 
-#### Step 2. Download CoreDetector
+#### Step 3. Download and install K8 (v1.0)
+Get the v1.0 release of the K8 Javascript shell from its GitHub repository [here](https://github.com/attractivechaos/k8/releases/tag/v1.0). Alternatively, execute the following commands to automatically download and configure the precompiled K8 binary:
+```bash
+wget "https://github.com/attractivechaos/k8/releases/download/v1.0/k8-1.0.tar.bz2"
+tar -xjf k8-1.0.tar.bz2
+cp k8-1.0/k8-x86_64-Linux $HOME/bin/k8
+```
+
+#### Step 4. Install a Java runtime/development kit
+[OpenJDK-11](https://openjdk.org/projects/jdk/11/) (or later versions) have been confirmed to work well with CoreDetector. For most Linux systems, these are easily installed via the package manager. E.g., to install OpenJDK-11 (the default JDK) on Ubuntu 22.04:
+```bash
+sudo apt-get -y install openjdk-11-jdk  # or default-jdk
+```
+
+#### Step 5. Download CoreDetector and run an example pipeline
+Finally, pull this GitHub repository to download the CoreDetector tool, and run a test case on the provided example set of genomes to confirm that the tool is working correctly.
 ```bash
 git clone https://github.com/mfruzan/CoreDetector.git
-
-# change directory into the CoreDetector directory
 cd CoreDetector
-
-# make sure the pipeline is executable
 chmod +x pipeline_Minimap.sh
+
+./pipeline_Minimap.sh -g example/quick_genomes.txt -o example_out -d 20 -n 16
 ```
 
-#### Step 3. Run pipeline on a list of the genome names and paths 
+## <a name="dockerqstart"></a>Quick start (using Docker)
+Alternatively, easily set up CoreDetector in a Docker container using the provided Dockerfile, which completely automates the installation. For information about setting up Docker on Windows/Mac/Linux and using containers, see [docs.docker.com](https://docs.docker.com/).
 ```bash
-# run the example set of genomes, a directory "example_out" is created for the alignment results 
-./pipeline_Minimap.sh  -g example/quick_genomes.txt  -o example_out -d 20  -n 16
+git clone https://github.com/mfruzan/CoreDetector.git
+cd CoreDetector
+sudo docker build -t coredetector .
+sudo docker run -it -v $(pwd)/example:/example coredetector
 ```
+In the interactive shell for the container, you can immediately run the Multiple Genome Aligner tool:
+```bash
+./pipeline_Minimap.sh -g example/quick_genomes.txt -o example/output -d 20 -n 16
+```
+
 ## Table of Contents
 
 - [Quick start](#qstart)
+- [Quick start (using Docker)](#dockerqstart)
 - [User Guide](#userguide)
   - [Dependencies](#depends)
   - [Input formats](#iformat)
