@@ -13,7 +13,7 @@
 #   ./pipeline_Minimap.sh -g example/quick_genomes.txt -o example/output -d 20
 #
 # Code author: Russell A. Edson, Biometry Hub
-# Date last modified: 16/12/2023
+# Date last modified: 17/12/2023
 FROM docker.io/ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -37,10 +37,19 @@ RUN wget "https://github.com/attractivechaos/k8/releases/download/v1.0/k8-1.0.ta
   && tar -xjf k8-1.0.tar.bz2 \
   && cp k8-1.0/k8-x86_64-Linux /usr/bin/k8
 
+# Download + install GSAlign (latest version from git repository)
+RUN git clone "https://github.com/hsinnan75/GSAlign" \
+  && cd GSAlign \
+  && make \
+  && cp bin/bwt_index bin/GSAlign /usr/bin/ \
+  && cd ..
+
 # Pull CoreDetector and install
-RUN git clone "https://github.com/mfruzan/CoreDetector.git" \
-  && cp CoreDetector/MFbio.jar CoreDetector/pipeline_Minimap.sh / \
-  && chmod u+x pipeline_Minimap.sh
+RUN mkdir -p /CoreDetector
+COPY . /CoreDetector/
+RUN cp CoreDetector/MFbio.jar CoreDetector/pipeline_Minimap.sh \
+  CoreDetector/pipeline_GSAlign.sh / \
+  && chmod u+x pipeline_Minimap.sh pipeline_GSAlign.sh
 
 # Helpful message for container startup
 RUN echo 'echo -e "Run the CoreDetector Multiple Genome Alignment tool using:\n"\
