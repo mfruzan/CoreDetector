@@ -7,6 +7,10 @@
 
 CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. 
 
+- [Quick start](#qstart)
+- [Quick start (using Docker)](#dockerqstart)
+- [Usage](#usage)
+
 ## <a name="qstart"></a>Quick start
 Installation and configuration of CoreDetector on Linux-based operating systems proceeds as follows.
 
@@ -64,107 +68,31 @@ In the interactive shell for the container, you can immediately run the Multiple
 ./pipeline_Minimap.sh -g example/quick_genomes.txt -o example/output -d 20 -n 16
 ```
 
-## Table of Contents
-
-- [Quick start](#qstart)
-- [Quick start (using Docker)](#dockerqstart)
-- [User Guide](#userguide)
-  - [Dependencies](#depends)
-  - [Input formats](#iformat)
-  - [Options](#options)
-
-## <a name="userguide"></a>User Guide
-
-The CoreDetector [Manual](https://github.com/mfruzan/CoreDetector/blob/master/Manual.md) explains installation, usage and further analysis examples. 
-
-The CoreDetector pipeline can be run: 
-
-* in the current directory
-* in a folder of your choice, just copy the MFbio.jar and pipeline_Minimap.sh files to  the new folder and change directory into the new folder.
-* from anywhere by copying MFbio.jar and pipeline_Minimap.sh to an executable bin PATH
-
-
-**Important**: Ensure you change the path in pipeline_Minimap.sh using a text editor. 
-
-For example: If you copy MFbio.jar and pipeline\_Minimap.sh files into an executable bin PATH "/usr/local/bin/", make sure you change lines 136 and 156 lines in pipeline_Minimap.sh from "MFbio.jar to "/usr/local/bin/MFbio.jar".
-
-```bash
-sudo cp MFbio.jar pipeline_Minimap.sh /usr/local/bin/
-
+## <a name="usage"></a>Usage
+Use the CoreDetector multiple alignment tool (with the Minimap2 pipeline) as follows:
+```
+./pipeline_Minimap.sh -g <genome_list> -o <out_dir> -d <divergence> -n <ncpus> -m <minlength> -c <chromosome>
 ```
 
-Before running the pipleline_Minimap.sh make sure it has execute permission.
-
-```bash
-# make sure the pipeline is executable
-chmod +x pipeline_Minimap.sh
-```
-
-
-## <a name="depends"></a>Dependencies
-
-Make sure Java 1.8 or higher is installed. 
-
-If Minimap2 aligner is used make sure minimap2 (https://github.com/lh3/minimap2) and k8 javascript engine (https://github.com/attractivechaos/k8) are installed and their executable files are in system path or PATH variable.
-In order to do that, first change directory to where you want minimap2 and k8 being installed and then run following commands:
-```bash
-# install minimap2
-git clone https://github.com/lh3/minimap2
-cd minimap2 && make
-# install the k8 javascript shell
-curl -L https://github.com/attractivechaos/k8/releases/download/v0.2.4/k8-0.2.4.tar.bz2 | tar -jxf -
-cp k8-0.2.4/k8-`uname -s` k8              # or copy it to a directory on your $PATH
-export PATH="$PATH:`pwd`:`pwd`/misc"   
-```
-
-
-If GSAlign pairwise aligner is used make sure GSAlign (https://github.com/hsinnan75/GSAlign) is installed and its executable files are in PATH environment variable. 
-
-
-## <a name="iformat"></a>Input formats
-
-Is a text file that lists of the name and full path to the FASTA files for each genome. 
-
-The text file has a line for each genome. For example in a text file called 'genomes.txt', each line represents a genome. Each line contains an alias name followed by the full path to its FASTA file separated by a space or Tab. 
-
+The main input file for CoreDetector is the `<genome_list>` text file, consisting of lines of genomes:
 ```bash
 Alg130	example/Alg130.fna
 DW5	example/DW5.fna
 M4	example/M4.fna
 ```
-Here we can arbitrarily choose Alg130 as the query and the remainder genomes become the subjects. 
-## <a name="iformat"></a>Output formats
-CoreDetector generates 2 output files in the output folder: <b>msa.maf</b> and <b>concatinated_msa.fa</b> 
+Each line contains an alias name (e.g., Alg130, DW5), followed by a space/Tab, then followed by the filepath to the FASTA file for that genome. In this example, Alg130 is the query genome, and the rest of the genomes become the subjects. This text file is passed to `./pipeline_Minimap.sh` using the `-g` flag.
 
-msa.maf is standard maf file that each entry of it contains one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome fasta file. This maf file
-is approperiate for structural variation detection.
+The `-o` argument specifies the output directory. CoreDetector generates two output files in the specified output folder: `msa.maf` and `concatinated_msa.fa`. Note that the directory will be created if it does not already exist.
 
-concatinated_msa.fa file is a fasta file that has one entry for each genome file that is constructed by concatinating that genome's subject line from all entries of msa.maf file. The name of each entry is the same as the name of genome introduced in genomes.txt input file. This file is approperiate for phylogenetics tree construction.
+- `msa.maf` is a standard MAF file, with each entry containing one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome FASTA file. This MAF output file is appropriate for structural variation detection.
+- `concatenated_msa.fa` is a FASTA file, with one entry for each genome file constructed by concatenating that genome's subject line from all entries of the `msa.maf` file. The name of each entry is the same name as the genome given in the input genome list file. This file is appropriate for phylogenetics tree construction.
 
-## <a name="options"></a>Options
+The `-d` argument is the expected divergence level, and can be any integer between 1 and 40.
 
-#### CoreDetector pipeline using  Minimap2
+Other arguments to CoreDetector are optional, and allow fine-tuning of the program configuration:
 
-```bash
-./pipeline_Minimap.sh  -g example/quick_genomes.txt  -o output_folder -d 20  -n 16
-```
-> * -g argument is text file that contains the list of genomes which points to the FASTA sequences. See example/genome.txt
-> * -o argument is an output folder where alignment files will be written to. 
->	###### Note: If this folder does not exist it will be created. 
-> * -d argument is an integer for the expected genome divergence level and can be any number between 1 and 40. 
-> * -n argument (optional) is the number of cores/CPUs (default is 4).
-> * -c argument (optional) enables chromosome number matching (1:enable, 0:disable, default is 0) Please note that when enabled then CoreDetector considers a contig name starts with a chromsome number, such as 2B or 14, followed by a white space (or characters '_' , '-' ) 
-> * -m argument (optional) sets minimum alignment length in bp (default is 200)
->	###### Note the first three arguments are required. 
+- `-n` is the number of cores/CPUs to use for the program execution (default is 4 cores).
+- `-m` is the minimum alignment length, in bp (the default is 200bp).
+- `-c` toggles chromosome number matching (1: enabled, 0:disabled, default is 0). Note that if chromosome number matching is enabled, CoreDetector considers a contig name to start with a chromosome number, such as 2B or 14, followed by a space (or the characters '_','-').
 
-#### pipeline using GSAlign 
-For the GSAlign pipeline the following GSAlign arguments can be edited and saved in a unix text editor.   
-
-> You can change:
->
-> -t (number of threads) 
-> -alen (minimum alignment length) 
-> -idy (minimum identity between query and subject) 
-> -ind (maximum indel length)
-
-
+The [CoreDetector Manual](https://github.com/mfruzan/CoreDetector/blob/master/Manual.md) explains program usage in detail, and lists further analysis examples.
