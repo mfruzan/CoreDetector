@@ -1,7 +1,7 @@
 # CoreDetector Multiple Genome Aligner
 <!-- badges -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-![Licence pending](https://img.shields.io/badge/licence-TBA-blue)
+![GitHub License](https://img.shields.io/github/license/mfruzan/CoreDetector)
 ![Static Badge](https://img.shields.io/badge/version-pending-80b6ff)
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmfruzan%2FCoreDetector&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 
