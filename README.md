@@ -22,7 +22,7 @@ echo "export PATH=$HOME/bin:${PATH}" >> $HOME/.bashrc && source $HOME/.bashrc
 ```
 
 #### Step 2. Download and install Minimap2 (v2.26)
-Grab the v2.26 release of Minimap2 from its GitHub repository [here](https://github.com/lh3/minimap2/releases/tag/v2.26). Alternatively, copy-paste the below commands to automatically download, compile and configure Minimap2. (Note: this compilation requires compiler tools and the zlib development headers to be installed: on Ubuntu 22.04, you can easily install these compilation dependencies with `sudo apt-get -y install build-essential zlib1g-dev`. You might need to run 'sudo apt-get update' before installing buil-essential and zlib1g-dev)
+Grab the v2.26 release of Minimap2 from its GitHub repository [here](https://github.com/lh3/minimap2/releases/tag/v2.26). Alternatively, copy-paste the below commands to automatically download, compile and configure Minimap2. (Note: this compilation requires compiler tools and the zlib development headers to be installed: on Ubuntu 22.04, you can easily install these compilation dependencies with `sudo apt-get -y install build-essential zlib1g-dev`. You might need to run `sudo apt-get update` before installing build-essential and zlib1g-dev)
 ```bash
 wget "https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26.tar.bz2"
 tar -xjf minimap2-2.26.tar.bz2
