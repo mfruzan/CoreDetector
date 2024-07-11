@@ -102,8 +102,8 @@ do
     echo Genome size gb : $gb;
     if (($gb > 3))
     then
-      K_param=$((gb+2));
-      I_param=$((gb+2));
+      #K_param=$((gb+2));
+      #I_param=$((gb+2));
     fi   
   else
     echo $queryfile;
