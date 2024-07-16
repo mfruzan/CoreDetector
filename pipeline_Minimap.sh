@@ -1,4 +1,4 @@
-#!/bin/bash
+ -P #!/bin/bash
 
 while getopts g:d:n:o:m:c: option
 do 
@@ -102,7 +102,7 @@ do
     echo Genome size gb : $gb;
     if (($gb > 3))
     then
-      #K_param=$((gb+2));
+      K_param=$((gb*2));
       #I_param=$((gb+2));
     fi   
   else
