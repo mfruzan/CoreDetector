@@ -49,6 +49,7 @@ fi
 mkdir -p "$outdir/temp_fasta"
 mkdir -p "$outdir/maf"
 mkdir -p "$outdir/filtered_maf"
+mkdir -p "$outdir/msa"
 
 if [[ -z $diverg ]]
 then
@@ -153,4 +154,4 @@ then
  mem=1
 fi
 
-java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/concatinated_msa.fa --file1 $outdir/msa.maf --file2 $genome ;
+java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/msa --file1 $outdir/msa.maf --file2 $genome ;
