@@ -10,6 +10,7 @@ do
         o)outdir=${OPTARG};;
         m)minlen=${OPTARG};;
         c)chrom=${OPTARG};;
+	f)mfa=${OPTARG};;
 
     esac
 done
@@ -28,6 +29,7 @@ if [ "$1" == "-h" ]; then
 	ncpus\t\tdefault is 4 cpus\n\
         minlength(Minimum alignment length)\t\tdefault is 200bp\n\
         chromosome(chromosome matching)\t\tdefault is 0 or disabled, to enable set it to 1\n\
+	multiple_fasta(whether or not generate multiple fasta file in subfolder mfasta, needs more disk space.)\t\tdefault is 1 or enabled, to disable set it to 0\n\
 	-h\t\tPrint Help (this message) and exit\n"
   exit 0
 fi
@@ -49,7 +51,7 @@ fi
 mkdir -p "$outdir/temp_fasta"
 mkdir -p "$outdir/maf"
 mkdir -p "$outdir/filtered_maf"
-mkdir -p "$outdir/msa"
+mkdir -p "$outdir/mfasta"
 
 if [[ -z $diverg ]]
 then
@@ -154,4 +156,4 @@ then
  mem=1
 fi
 
-java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/msa --file1 $outdir/msa.maf --file2 $genome ;
+java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf --file2 $genome --p2 ${mfasta};
