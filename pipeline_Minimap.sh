@@ -182,4 +182,4 @@ then
  mem=1
 fi
 
-java -jar -Xmx${mem}g MFbio/MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
+java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
