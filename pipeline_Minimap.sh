@@ -165,11 +165,11 @@ do
     java -jar MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
     queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
-    echo "${maflist}";
+    #echo "${maflist}";
   fi
   id=$((id+1));
   #echo $id;
-done <<<$(cat $genome)
+done <<<"$(cat $genome)"
 
 #echo $maflist;
 #get 80% of system available memroy in Gbyte for java
