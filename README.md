@@ -2,8 +2,7 @@
 <!-- badges -->
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 ![GitHub License](https://img.shields.io/github/license/mfruzan/CoreDetector)
-![Static Badge](https://img.shields.io/badge/version-pending-80b6ff)
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fmfruzan%2FCoreDetector&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
+![Static Badge](https://img.shields.io/badge/version-1.0.0-80b6ff)
 
 CoreDetector is a new fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. 
 
@@ -70,7 +69,7 @@ In the interactive shell for the container, you can immediately run the Multiple
 
 ## <a name="usage"></a>Usage
 Use the CoreDetector multiple alignment tool (with the Minimap2 pipeline) as follows:
-```
+```bash
 ./pipeline_Minimap.sh -g <genome_list> -o <out_dir> -d <divergence> -n <ncpus> -m <minlength> -c <chromosome>
 ```
 
@@ -82,10 +81,16 @@ M4	example/M4.fna
 ```
 Each line contains an alias name (e.g., Alg130, DW5), followed by a space/Tab, then followed by the filepath to the FASTA file for that genome. In this example, Alg130 is the query genome, and the rest of the genomes become the subjects. This text file is passed to `./pipeline_Minimap.sh` using the `-g` flag.
 
-The `-o` argument specifies the output directory. CoreDetector generates two output files in the specified output folder: `msa.maf` and `concatinated_msa.fa`. Note that the directory will be created if it does not already exist.
+The `-o` argument specifies the output directory. Note that this
+directory will be created if it does not already exist. Inside the
+output directory, CoreDetector generates a series of intermediate output files during the alignment process, but the main program outputs are:
 
-- `msa.maf` is a standard MAF file, with each entry containing one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome FASTA file. This MAF output file is appropriate for structural variation detection.
-- `concatenated_msa.fa` is a FASTA file, with one entry for each genome file constructed by concatenating that genome's subject line from all entries of the `msa.maf` file. The name of each entry is the same name as the genome given in the input genome list file. This file is appropriate for phylogenetics tree construction.
+- `msa.maf.gz`: This is a gzipped version of a standard MAF file, with each entry containing one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome FASTA file. Once gunzipped, this MAF output file is appropriate for structural variation detection.
+- `mfasta/`: This directory contains FASTA files for each genome, constructed by concatenating that genome's subject line from all entries of the (gunzipped) `msa.maf` file. You can readily concatenate these files together to construct a full FASTA file, e.g. on Linux:
+   ```bash
+   cat mfasta/* > concatenated_msa.fa
+   ```
+   This file is then appropriate for phylogenetics tree construction. The name of each entry will be the same name as the genome given in the input genome list file.
 
 The `-d` argument is the expected divergence level, and can be any integer between 1 and 40.
 

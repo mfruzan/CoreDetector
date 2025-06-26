@@ -111,7 +111,7 @@ After CoreDetector is setup, the Minimap2 pipeline can be run.
 
 **`Step 1.`** Let us first view the CoreDetector options (arguments)
 
-The required and mandatoy options for the Minimap2 pipeline (pipeline_Minimap.sh) can be  viewed using the help (-h) argument as follows.
+The required and mandatory options for the Minimap2 pipeline (pipeline_Minimap.sh) can be  viewed using the help (-h) argument as follows.
 
 ```bash
 pipeline_Minimap.sh -h
@@ -177,8 +177,7 @@ mv example/genomes.txt .
 ls output/
 ```
 
-After CoreDetector has completed (~5mins) you will see the final alignment length and find the results in the output folder. The concatinated_msa.fa file contains the extracted fasta alignment that can then be used for further analysis.
-
+After CoreDetector has completed (~5mins) you will see the final alignment length and find the results in the output folder.
 
 Output:
 
@@ -189,8 +188,17 @@ Length of Alignment 33764393
 Total Query Length 32082566
 Done!
 
-concatinated_msa.fa  filtered_maf  maf  msa.maf  temp_fasta
+filtered_maf  maf  mfasta  msa.maf.gz  temp_fasta
 ```
+
+The mfasta/ directory contains the extracted fasta alignment for each genome in a separate file. You can concatenate the genome FASTA files
+together using cat:
+
+```bash
+cat mfasta/* > concatenated_msa.fa
+```
+This new file concatinated_msa.fa then contains the complete fasta alignment that can be used for further analysis.
+
 
 ## <a name="analysis"></a> 4. Futher analysis of the core genome
 
