@@ -145,31 +145,30 @@ do
        if (( $divergence <= 5 )) 
        then
          #echo minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -f ${f_param} -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} ;
-         minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -f ${f_param} -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;         
+         minimap2 -x asm5  -I${I_param}g  -K${K_param}g  -f ${f_param} -H --cs=long -t ${cores} --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;         
        elif (( $divergence <= 10 )) 
        then
-         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -f ${f_param} -H --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+         minimap2 -x asm10 -I${I_param}g  -K${K_param}g  -f ${f_param} -H --cs=long -t ${cores} --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        elif (( $divergence <= 20 )) 
        then
-         minimap2 -x asm20  -I${I_param}g  -K${K_param}g -f ${f_param} -H  --cs=long -t ${cores} --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+         minimap2 -x asm20  -I${I_param}g  -K${K_param}g -f ${f_param} -H  --cs=long -t ${cores} --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        elif (( $divergence <= 30 )) 
        then
-         minimap2  -I${I_param}g  -K${K_param}g -f ${f_param} -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+         minimap2  -I${I_param}g  -K${K_param}g -f ${f_param} -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 2 -O 4,10 -E 2,1 -s 200 -z 200 -N 50  -t ${cores}  --cs=long  --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        else
-         minimap2  -I${I_param}g  -K${K_param}g  -f ${f_param} -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=no ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
+         minimap2  -I${I_param}g  -K${K_param}g  -f ${f_param} -H -k 19 -w 10 -U 50,500 --rmq=yes -r 10k,100k -g 10k -A 1 -B 1 -O 4,10 -E 2,1 -s 400 -z 400 -N 50  -t ${cores}  --cs=long  --secondary=yes ${arr[1]}  ${queryfile} | paftools.js view -f maf - >$outdir/maf/${twin}.maf;
        fi
     fi
     exitcode=$(echo $?)
     echo exit code is $exitcode
     newmaf=${twin}".maf"
-    java -jar MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
+    java -Djava.awt.headless=true -jar /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
     queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
-    #echo "${maflist}";
   fi
   id=$((id+1));
   #echo $id;
-done <<<"$(cat $genome)"
+done <<<$(cat $genome)
 
 #echo $maflist;
 #get 80% of system available memroy in Gbyte for java
@@ -183,4 +182,4 @@ then
  mem=1
 fi
 
-java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
+#java -jar -Xmx${mem}g /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
