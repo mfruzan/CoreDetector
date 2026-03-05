@@ -162,7 +162,7 @@ do
     exitcode=$(echo $?)
     echo exit code is $exitcode
     newmaf=${twin}".maf"
-    java -Djava.awt.headless=true -jar /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
+    java -Djava.awt.headless=true -jar MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
     queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
   fi
@@ -182,4 +182,4 @@ then
  mem=1
 fi
 
-#java -jar -Xmx${mem}g /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
+java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
