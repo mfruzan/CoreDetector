@@ -26,7 +26,7 @@ Grab the v2.26 release of Minimap2 from its GitHub repository [here](https://git
 wget "https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26.tar.bz2"
 tar -xjf minimap2-2.26.tar.bz2
 cd minimap2-2.26 && make
-cp minimap2 misc/paftools.js $HOME/bin/
+cp minimap2/misc/paftools.js $HOME/bin/
 cd ..
 ```
 
