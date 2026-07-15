@@ -98,6 +98,6 @@ Other arguments to CoreDetector are optional, and allow fine-tuning of the progr
 
 - `-n` is the number of cores/CPUs to use for the program execution (default is 4 cores).
 - `-m` is the minimum alignment length, in bp (the default is 200bp).
-- `-c` toggles chromosome number matching (1: enabled, 0:disabled, default is 0). Note that if chromosome number matching is enabled, CoreDetector considers a contig name to start with a chromosome number, such as 2B or 14, followed by a space (or the characters '_','-').
+- `-c` toggles chromosome number matching (1: enabled, 0:disabled, default is 0). Note that if chromosome number matching is enabled, CoreDetector considers a contig name to start with a chromosome number, such as '2B' or 'chr14' or simply '14', followed by a space (or the characters '_','-','!'). If this pattern does not exist in contig names, no error will be raised, but chromosome checking will be skipped for current genome.
 
 The [CoreDetector Manual](https://github.com/mfruzan/CoreDetector/blob/master/Manual.md) explains program usage in detail, and lists further analysis examples.
