@@ -206,6 +206,7 @@ This new file concatinated_msa.fa then contains the complete fasta alignment tha
 
 ### <a name="synteny"></a>Synteny plots
 When chromsome numbers are available for some or all species, then visualizing synteny between them is valuable tool to study structural varations. CoreDetector toolkit provides an easy to implement pipeline to generate synteny plots.
+
 **`Step 1`** For each specie with create a bed file using bellow command (here our specie name is Lancer):
 ```bash
  java -jar MFbio.jar --task maf2bed --srcdir  OutDir/core_msa.maf.gz --destdir OutDir/beds/lancer.bed  --entry Lancer  --cnv 0

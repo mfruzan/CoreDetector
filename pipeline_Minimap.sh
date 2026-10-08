@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts g:d:n:o:m:c:f: option
+while getopts g:d:n:o:m:c: option
 do 
     case "${option}"
         in
@@ -10,7 +10,7 @@ do
         o)outdir=${OPTARG};;
         m)minlen=${OPTARG};;
         c)chrom=${OPTARG};;
-        f)mfa=${OPTARG};;
+        
 
     esac
 done
@@ -28,8 +28,7 @@ if [ "$1" == "-h" ]; then
   echo -e "Optional:\n\
 	ncpus\t\tdefault is 4 cpus\n\
         minlength(Minimum alignment length)\t\tdefault is 200bp\n\
-        chromosome(chromosome matching)\t\tdefault is 0 or disabled, to enable set it to 1\n\
-        multiple_fasta(whether or not generate multiple fasta file in subfolder mfasta, needs more disk space.)\t\tdefault is 1 or enabled, to disable set it to 0\n\ 
+        chromosome(chromosome matching)\t\tdefault is 0 or disabled, to enable set it to 1\n\        
 	-h\t\tPrint Help (this message) and exit\n"
   exit 0
 fi
@@ -51,7 +50,7 @@ fi
 mkdir -p "$outdir/temp_fasta"
 mkdir -p "$outdir/maf"
 mkdir -p "$outdir/filtered_maf"
-mkdir -p "$outdir/mfasta"
+
 
 
 if [[ -z $diverg ]]
@@ -81,12 +80,19 @@ then
   chromosome=$(($chrom));
 fi
 
-mfasta=1
-if [[ ! -z $mfa ]]
-then
-  mfasta=$(($mfa));
+
+mem=1
+#see if job is run under slurm
+if [ -n "$SLURM_JOB_ID" ]; then
+    echo "Running under Slurm (Job ID: $SLURM_JOB_ID)"
+    mem=$((SLURM_MEM_PER_NODE / 1024));
+else
+  mem=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)  
 fi
 
+mem=${mem%.*}
+mem=$(($mem))
+echo available memory ${mem} gb;
 
 declare -i id=1;
 declare -i I_param=4;
@@ -114,22 +120,27 @@ do
     echo Genome size gb : $gb;
     if (($gb > 3))
     then
-      I_param=$((gb*3));
+      I_param=$((gb+2));
       #K_param=$((gb+2));
-    fi   
+    fi
+    if (($mem > 100))
+    then
+     K_param=2
+    fi
+   
     #estimate repeat size
     rep=$(grep -P "^[^>]" ${arr[1]} | tr -dc [acgt] | wc -c)
     repgb=$((rep/1073741824))
     echo Repeat size gb : $repgb;
-    if (($repgb > 10))
+    if (($repgb > 10) || ($gb > 10))
     then
      f_param="0.1";
-    elif (( $repgb > 7 ))
+    elif (( $repgb > 7 ) || ($gb > 7))
     then
      f_param="0.05";
-    elif (( $repgb > 3 ))
+    elif (( $repgb > 3 ) || ($gb > 3))
     then
-     f_param="0.005";     
+     f_param="0.005";    
     fi   
 
   else
@@ -162,7 +173,7 @@ do
     exitcode=$(echo $?)
     echo exit code is $exitcode
     newmaf=${twin}".maf"
-    java -Djava.awt.headless=true -jar MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
+    java -Djava.awt.headless=true -jar /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
     queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
   fi
@@ -170,16 +181,23 @@ do
   #echo $id;
 done <<<$(cat $genome)
 
-#echo $maflist;
+echo $maflist;
 #get 80% of system available memroy in Gbyte for java
-mem=$(awk '/MemAvailable/ { printf "%.3f \n", $2/1024/1024 }' /proc/meminfo)
-echo available memory ${mem} gb;
-mem=${mem%.*}
-mem=$(($mem))
 mem=$(($mem*80/100))
 if (($mem < 1))
 then
  mem=1
 fi
+echo available memory for java ${mem} gb;
+if (($cores > 2))
+then
+  cores=$((cores-1));
+fi
 
-java -jar -Xmx${mem}g MFbio.jar --task maf2msa --srcdir $outdir/filtered_maf --p1 ${maflist} --destdir $outdir/mfasta --file1 $outdir/msa.maf.gz --file2 $genome  --p2 ${mfasta};
+
+java -Djava.awt.headless=true -jar -Xmx${mem}g MFbio.jar --task maf2msaMT --srcdir $outdir/filtered_maf --p1 ${maflist}  --file1 $outdir/msa.maf.gz --file2 $genome   --threads ${cores};
+
+cd $outdir
+cat $(ls msa.maf_*.gz -v) > msa.maf.gz;
+rm msa.maf_*.gz
+
