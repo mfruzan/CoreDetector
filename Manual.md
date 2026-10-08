@@ -13,8 +13,10 @@ The analysis of the core-genome alignments of conserved sequence is important to
 - [2. Input formats](#iformat)
 - [3. Basic usage](#options)
 - [4. Further analyses](#analysis)
+  - [Synteny Plots](#synteny)
   - [Phylogeny](#phylo)
   - [Comparing trees](#comp)
+
 
 
 ## <a name="install"></a> 1. CoreDetector installation
@@ -188,7 +190,7 @@ Length of Alignment 33764393
 Total Query Length 32082566
 Done!
 
-filtered_maf  maf  mfasta  msa.maf.gz  temp_fasta
+filtered_maf  maf   core_msa.maf.gz  temp_fasta
 ```
 
 The mfasta/ directory contains the extracted fasta alignment for each genome in a separate file. You can concatenate the genome FASTA files
@@ -202,7 +204,14 @@ This new file concatinated_msa.fa then contains the complete fasta alignment tha
 
 ## <a name="analysis"></a> 4. Futher analysis of the core genome
 
-
+### <a name="synteny"></a>Synteny plots
+When chromsome numbers are available for some or all species, then visualizing synteny between them is valuable tool to study structural varations. CoreDetector toolkit provides an easy to implement pipeline to generate synteny plots.
+**`Step 1`** For each specie with create a bed file using bellow command (here our specie name is Lancer):
+```bash
+ java -jar MFbio.jar --task maf2bed --srcdir  OutDir/core_msa.maf.gz --destdir OutDir/beds/lancer.bed  --entry Lancer  --cnv 0
+```
+**`Step 2`** Now all bed files are in folder OutDir/beds:
+  
 ### <a name="phylo"></a>Phylogeny
 
 Now that we have the core alignment in fasta format we can conduct phylogenetic analysis. You can use a tool of your preference, but here we will use the tool Phylip.
@@ -377,6 +386,7 @@ https://rstudio-education.github.io/hopr/starting.html
 
 ![Figure 3](./r\_analysis/tree\_clades.png "Figure 3")
 **Figure 3.** *Pyrenophora tritici-repentis* fungal pathogen phylogenetic tree topology comparisons. Trees generated from CoreDetector (left), Parsnp (centre) and Phylonium (right) show three groups related to geographic locations, Europe (violet), Australia (blue) and North Africa (tan). The Ptr isolate identifiers are shown in all three trees.
+
 
 
 

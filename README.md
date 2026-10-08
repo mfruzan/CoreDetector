@@ -26,7 +26,7 @@ Grab the v2.26 release of Minimap2 from its GitHub repository [here](https://git
 wget "https://github.com/lh3/minimap2/releases/download/v2.26/minimap2-2.26.tar.bz2"
 tar -xjf minimap2-2.26.tar.bz2
 cd minimap2-2.26 && make
-cp minimap2/misc/paftools.js $HOME/bin/
+cp minimap2 misc/paftools.js $HOME/bin/
 cd ..
 ```
 
@@ -85,12 +85,8 @@ The `-o` argument specifies the output directory. Note that this
 directory will be created if it does not already exist. Inside the
 output directory, CoreDetector generates a series of intermediate output files during the alignment process, but the main program outputs are:
 
-- `msa.maf.gz`: This is a gzipped version of a standard MAF file, with each entry containing one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome FASTA file. Once gunzipped, this MAF output file is appropriate for structural variation detection.
-- `mfasta/`: This directory contains FASTA files for each genome, constructed by concatenating that genome's subject line from all entries of the (gunzipped) `msa.maf` file. You can readily concatenate these files together to construct a full FASTA file, e.g. on Linux:
-   ```bash
-   cat mfasta/* > concatenated_msa.fa
-   ```
-   This file is then appropriate for phylogenetics tree construction. The name of each entry will be the same name as the genome given in the input genome list file.
+- `core_msa.maf.gz`: This is a gzipped version of a standard MAF file, with each entry containing one subject file for each genome. Coordinates and strandness of entries are in respect to the original genome FASTA file. Once gunzipped, this MAF output file is appropriate for structural variation detection.
+
 
 The `-d` argument is the expected divergence level, and can be any integer between 1 and 40.
 
@@ -98,6 +94,6 @@ Other arguments to CoreDetector are optional, and allow fine-tuning of the progr
 
 - `-n` is the number of cores/CPUs to use for the program execution (default is 4 cores).
 - `-m` is the minimum alignment length, in bp (the default is 200bp).
-- `-c` toggles chromosome number matching (1: enabled, 0:disabled, default is 0). Note that if chromosome number matching is enabled, CoreDetector considers a contig name to start with a chromosome number, such as '2B' or 'chr14' or simply '14', followed by a space (or the characters '_','-','!'). If this pattern does not exist in contig names, no error will be raised, but chromosome checking will be skipped for current genome.
+- `-c` toggles chromosome number matching (1: enabled, 0:disabled, default is 0). Note that if chromosome number matching is enabled, CoreDetector considers a contig name to start with a chromosome number, such as '2B', 'chr14' or '14', followed by a space (or the characters '_','-','!'). If this pattern does not exist in contig names, no error will be raised, but chromosome checking will be skipped for current genome.
 
 The [CoreDetector Manual](https://github.com/mfruzan/CoreDetector/blob/master/Manual.md) explains program usage in detail, and lists further analysis examples.
