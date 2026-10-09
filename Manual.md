@@ -4,9 +4,7 @@
 ##### mario.fruzangohar@adelaide.edu.au
 ##### 31-08-2023
 
-This document explains how to install and use CoreDetector, for core genome alignment, phylogenetic tree reconstruction and gives an example for the comparison of phylogenetic trees.
-
-The analysis of the core-genome alignments of conserved sequence is important to measure genetic changes between population individuals and show not only the evolutionary relationships within a population but provide further insight into core gene functions and how these may shift over time or geography. This is however complicated by the limitation of current tools containing the functionality to process larger and more diverse speices. CoreDetector is a fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. This document explains how to install and use CoreDetector, for core genome alignment, phylogenetic tree reconstruction and gives an example for the comparison of phylogenetic trees.
+The analysis of the core-genome alignments of conserved sequence is important to measure genetic changes between population individuals and show not only the evolutionary relationships within a population but provide further insight into core gene functions and how these may shift over time or geography. This is however complicated by the limitation of current tools containing the functionality to process larger and more diverse speices. CoreDetector is a fast and flexible program that is able to identify the core-genome sequence of larger and more evolutionary diverse genomes. This document explains how to install and use CoreDetector for core genome alignment, synteny graph, and phylogenetic tree reconstruction and comparison.
 
 ## Table of Contents
 
