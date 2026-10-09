@@ -207,12 +207,17 @@ This new file concatinated_msa.fa then contains the complete fasta alignment tha
 ### <a name="synteny"></a>Synteny plots
 When chromsome numbers are available for some or all species, then visualizing synteny between them is valuable tool to study structural varations. CoreDetector toolkit provides an easy to implement pipeline to generate synteny plots.
 
-**`Step 1`** For each specie with create a bed file using bellow command (here our specie name is Lancer):
+**`Step 1.`** For each specie with create a bed file using bellow command (here our specie name is Lancer):
+
 ```bash
  java -jar MFbio.jar --task maf2bed --srcdir  OutDir/core_msa.maf.gz --destdir OutDir/beds/lancer.bed  --entry Lancer  --cnv 0
 ```
-**`Step 2`** Now all bed files are in folder OutDir/beds:
-  
+
+**`Step 2.`** Once all bed files are in folder OutDir/beds, use [Synteny Graph
+Builder](https://github.com/AAGI-AUS/gene-visualisation) (follow the steps in the link) to explore genomic structural variation. The tool should create a synteny graph similar to the screenshot below.
+
+![synteny graph example](https://raw.githubusercontent.com/AAGI-AUS/gene-visualisation/8343130a4cde026b9e9cee958ce92575d6811cb9/docs/example.png)
+
 ### <a name="phylo"></a>Phylogeny
 
 Now that we have the core alignment in fasta format we can conduct phylogenetic analysis. You can use a tool of your preference, but here we will use the tool Phylip.
@@ -366,24 +371,24 @@ You will be using RStudio for this analysis. If you do not have it already, you 
 
 https://rstudio-education.github.io/hopr/starting.html
 
-**`Step 1`** In the CoreDetector directory open r_analysis/MGA-Analysis.Rmd with RStudio.
+**`Step 1.`** In the CoreDetector directory open r_analysis/MGA-Analysis.Rmd with RStudio.
 
-**`Step 2`** Run the code chunks **"1. set the path to files"** and **"2. load the libraries required"**.
+**`Step 2.`** Run the code chunks **"1. set the path to files"** and **"2. load the libraries required"**.
 
-**`Step 3`** In the next section "Fungal pathogen phylogenic tree comparison"  the code chunk  **"3. Load CoreDetector, Parsnp and Phylonium trees"** loads three trees that are then sorted (using the TreeTools package) on each node into a consistent order, so that node rotation does not obscure similarities between similar trees for comparison.
+**`Step 3.`** In the next section "Fungal pathogen phylogenic tree comparison"  the code chunk  **"3. Load CoreDetector, Parsnp and Phylonium trees"** loads three trees that are then sorted (using the TreeTools package) on each node into a consistent order, so that node rotation does not obscure similarities between similar trees for comparison.
 
-**`Step 4`** We will now compare the first two trees by running the code chunk for **"4. Compare the generated trees from CoreDetector and Parsnp"** (using ape package) which returns a detatiled report of this comparison. 
+**`Step 4.`** We will now compare the first two trees by running the code chunk for **"4. Compare the generated trees from CoreDetector and Parsnp"** (using ape package) which returns a detatiled report of this comparison. 
 
 ![Figure 1](./r\_analysis/compare\_tree1\_tree2.png "Figure 1") 
 **Figure 1.** CoreDetector tree (tree 1) with splits incommon to the Parsnp generated tree (left) and Parsnp tree (tree 2) shows splits incommon to the CoreDetector generated tree (right).
 
 
-**`Step 5`** We next compare the first and third tree set by running the code chunk for **"5. Compare the generated trees from CoreDetector and Phylonium"** (Figure 2).
+**`Step 5.`** We next compare the first and third tree set by running the code chunk for **"5. Compare the generated trees from CoreDetector and Phylonium"** (Figure 2).
 
 ![Figure 2](./r\_analysis/compare\_tree1\_tree3.png "Figure 2") 
 **Figure 2.** CoreDetector tree (tree 1) with splits incommon to the Phylonium generated tree (left) and the Phylonium tree (tree 3) shows splits incommon to CoreDetector generated tree (right).
 
-**`Step 6`** This final step plots the three trees including the geographic origin of the isolates highlighted by running **"6. For each tree highlight the geographic origin of the isolates"**. Figure 3 shows the three trees and the geographic source of the isolates highlighted.
+**`Step 6.`** This final step plots the three trees including the geographic origin of the isolates highlighted by running **"6. For each tree highlight the geographic origin of the isolates"**. Figure 3 shows the three trees and the geographic source of the isolates highlighted.
 
 ![Figure 3](./r\_analysis/tree\_clades.png "Figure 3")
 **Figure 3.** *Pyrenophora tritici-repentis* fungal pathogen phylogenetic tree topology comparisons. Trees generated from CoreDetector (left), Parsnp (centre) and Phylonium (right) show three groups related to geographic locations, Europe (violet), Australia (blue) and North Africa (tan). The Ptr isolate identifiers are shown in all three trees.
