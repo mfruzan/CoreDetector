@@ -7,18 +7,7 @@ rownames(dfcovg) <- substr(rownames(dfcovg),2,3)
 dfcovg <- dfcovg[chrnames,]
 sums <- rowSums(dfcovg)
 
-ratios <- sums/chrlens
-matdata <- c(ratios, 1-ratios)
-matratio <- matrix(matdata, nrow=2, ncol=21, byrow=T)
-colnames(matratio) <- chrnames
-par(cex=0.8)
-barplot(matratio, besidae=F)
-total_ratio <- c(0.72, 0.28)
-my_labels <- c("Core", " ")
-cols <- c("Black", "grey")
-pie(total_ratio, labels=my_labels, col=cols)
-dev.off();
-plot.new()
+#This code is for generating supplementary Figure 1
 
 par(mar=c(0,2,0,0), mfrow = c(23,1))
 plot(c(1:1000),dfcovg["1A",]/100000,type="l", xaxt="n", yaxt="n"); abline(v=213, col="green"); mtext(side = 2, text = "1A", line = 0.5)
@@ -54,116 +43,147 @@ max(bed$V3)
 write.table(bed, file="iwgsc_refseqv2.1_annotation_200916_HC2.bed", sep="\t", quote = F,  row.names = F, col.names=F)
 #####################################################################################
 ##############################
-#this code is for visualizing gaps in wheat
+#this code is for visualizing gaps graphs
+#java -jar MFbio.jar --task mafinfo --srcdir /CoreDetector_outdir/msa.maf.gz
 chromspecies <- c("CS","spelt","mace","julius","norin61","lancer","mattis","jagger","landmark","arina","stanley", "paragon")
 species <- c("CS","spelt","mace","julius","norin61","lancer","mattis","jagger","landmark","arina","stanley", "paragon","weebil","robigus","claire","cadenza")
 gaps <- read.table("gaps.txt", sep="\t", header=F)
+
 dim(gaps)
-#13,265,923  6 
+#13,833,261   6   gaps larger than 100bp 
+lratio <- function(read){
+  #returns ratio of lowercase characters 
+  lread <- tolower(read)
+  lst1<- unlist(strsplit(read,""))
+  lst2<- unlist(strsplit(lread,""))
+  return(length(which(lst1==lst2))/nchar(read))
+  
+}
 colnames(gaps) <- c("hsp", "specie", "chrom", "start", "realstart", "len")
 length(unique(gaps$hsp))
-#630,493  hsp's that contain gaps larger than 100bp
+#661,022  hsp's that contain gaps larger than 100bp
 #aggregate based on chromosome, start postion and number of cultivars related to that gap
 gap_agg1 <- aggregate(specie~hsp+start, gaps , FUN=function(v){return(length(unique(v)))})
 gap_agg1 <- gap_agg1[order(gap_agg1$hsp, gap_agg1$start),]
 max(gap_agg1$specie)
 #15
+#unique insertion
 uins <- gap_agg1[which(gap_agg1$specie==15)  ,]
 dim(uins)
-#580,696
-merged <- merge(gaps, uins, by.x=c(1,4), by.y=c(1,2))
-dim(merged)
-#8,710,440       7
-merged10k <- merged[merged$len>10000,]
-length(which(merged10k$len>10000))/15
-#4819 number of unique insertions larger than 10K
+#602754
+gapmerged <- merge(gaps, uins, by.x=c(1,4), by.y=c(1,2))
+dim(gapmerged)
+#9,041,310       7
+
+merged10k <- gapmerged[gapmerged$len>9000,]
+dim(merged10k)[1]/15
+#7424 number of unique insertions larger than 10K
 #now for each gap alignment we find the missing one that would be insertion specie
 agg_func <- function(x){
   #cat(paste(length(x[,3]),","))
   if(dim(x)[1]==15){
-     spc <- species[which(!species%in%x[,3])]
-     #find chr and position of CS
-     vv <- data.frame()
-     if (spc!="CS"){
-       vv <- x[x[,3]=="CS", 4:6]
-     }else{
-       #stanley is closest in terms of CNV to CS
-       vv <- x[x[,3]=="stanley", 4:6]
-     }
-     return (list(spc, vv[1,1], vv[1,2], vv[1,3]))
+    spc <- species[which(!species%in%x[,3])]
+    #find chr and position of CS
+    vv <- data.frame()
+    if (spc!="CS"){
+      vv <- x[x[,3]=="CS", c(1,2,4,6)]
+    }else{
+      #stanley is closest in terms of CNV to CS
+      vv <- x[x[,3]=="stanley", c(1,2,4,6)]
+    }
+    return (list(vv[1,1], vv[1,2], spc,  vv[1,3], vv[1,4]))
   }else
-    return (list(NA,NA,NA,NA))
+    return (list(NA,NA,NA,NA,NA))
 }
 res <- by(merged10k, merged10k[,c(1,2)], FUN=agg_func, simplify=FALSE)
 res <- unlist(as.list(res))
 length(res)
-#19288
-insdf <- data.frame(matrix(res, ncol=4, byrow =T))
+#31,110
+insdf <- data.frame(matrix(res, ncol=5, byrow =T))
 dim(insdf)
-#4822 4
-insdf <- insdf[-which(rowSums(is.na(insdf))==4),]
+#6,222  5
+insdf <- insdf[-which(rowSums(is.na(insdf))==5),]
 dim(insdf)
-#4818
-insdf$X3 <- as.numeric(insdf$X3)
-insdf$X4 <- as.numeric(insdf$X4)
-max(insdf$X4)
-#99198
-insdf[which(insdf$X4==99198),]
-colnames(insdf) <- c("specie","chrom","start","len")
-#lancer 1B 139451389 99198
+#6217  5
+colnames(insdf) <- c("hsp","start","specie","chrom","len")
+insdf$hsp <- as.numeric(insdf$hsp)
+insdf$start <- as.numeric(insdf$start)
+insdf$len <- as.numeric(insdf$len)
+max(insdf$len)
+#104,737
+insdf <- insdf[order(insdf$hsp, insdf$start),]
+
+write.table(insdf, file="uins.txt", quote=F, sep="\t", row.names = F, col.names=F)
+
+insdf[insdf$chrom=="1A" & insdf$specie=="CS",]
+#hsp start specie chrom   len
+#27023 21872     CS    1A 11611
+merged10k[merged10k$hsp==27023,]
+
+insdf[which(insdf$len==104737),]
+#stanley 1D 15,289,886 104,737
+insdf <- insdf[order(-insdf$len),]
+# first one in 1A is hsp 89955
+merged10k[merged10k$hsp==89955,]
+#......
+#89955  1201  norin61    1A 510489366 86450       15
+#......
+
+#to see more details of that insertion
+# we extract it using task extractmafsegment and the result is in the file stanley_uins.fa that later blasted to NCBI and the result is in manuscript
+#hsp start specie.x chrom realstart    len specie.y
+#290943 15800    arina    1D  14479177 104737       15
+merged10k[merged10k$len==104737,]
+
+gapmerged[gapmerged$len==9999,]
+
+insdf[which(insdf$len==97957),]
+#3159  arina    3B 247881852 97957
+merged10k[merged10k$len==97957,]
+#hsp :812033  start:5328 len:97957
+
+
 #see if chinese spring has unique insertion larger than 10K
 insdf[insdf$specie=="CS",]
-#3722     CS    7B 181434262 17128
-#3839     CS    1A  49406678 11611
+#5023     CS    7B 181434262 17128
+#5154     CS    1A  49406678 11611
+#5720     CS    3B  44205678 14810
+#5751     CS    4A  75774923 12440
+
+#this is for manuscript Figure  4c
 sum_ins <- aggregate(len~specie+chrom, insdf , FUN=length)
 sum_ins <- sum_ins[sum_ins$specie%in%chromspecies,]
 min(sum_ins$len)
 #1
 max(sum_ins$len)
-#199
+#250
 tab <-  xtabs(len ~ specie + chrom, data = sum_ins)
 
 temat <- as.matrix(tab)
 heatmap(temat, scale='none' )
 
-#now for uniue insertion larger than 20k now visulize it in circlize for 12 cultivars
-merged20k <- merged[merged$len>20000,]
-dim(merged20k)[1]/15
-#512
-#
-merged20k <- merged20k[merged20k$specie.x%in%chromspecies, ]
-dim(merged20k)[1]/11
-gap_agg2 <- aggregate(specie~hsp+start, gaps , FUN=function(v){return(length(v))})
-max(gap_agg2$specie)
-#15
-max(gaps$len)
-#99198
-gaps[gaps$hsp==92740,]
-#it shows that lancer has insertion of size 99198
-#to find unique insertions, we look for entries having 15  
-
-
+#Figure 4a of manuscript
 gaps_12 <- gaps[which(gaps$specie%in%chromspecies), ]
 dim(gaps)
-#13,265,923
+#13,833,261
 sum_gaps <- aggregate(len~specie+chrom, gaps_12 , FUN=length)
 min(sum_gaps$len)
-#13,461
+#15,569
 max(sum_gaps$len)
-#57,988
+#61,801
 tab <-  xtabs(len ~ specie + chrom, data = sum_gaps)
 
 temat <- as.matrix(tab)
 heatmap(temat, scale='none' )
-
+#Figure 4b of manuscript
 gaps_12_10k <- gaps_12[which(gaps_12$len>10000),]
 dim(gaps_12_10k)
-#103,339    6
+#134,644   6
 sum_gaps <- aggregate(len~specie+chrom, gaps_12_10k , FUN=length)
 min(sum_gaps$len)
-#58
+#68
 max(sum_gaps$len)
-#1173
+#1717
 tab <-  xtabs(len ~ specie + chrom, data = sum_gaps)
 
 temat <- as.matrix(tab)
@@ -172,38 +192,121 @@ heatmap(temat, scale='none' )
 
 #gaps larger that 10K
 length(which(gaps_12$len>10000))
-#94,665
+#134,644
+#gaps larger that 30K
 length(which(gaps$len>30000))
-#2142
+#5548
+################################################
+#Find largest unique insertion in cactus result
+gaps <- read.table("gaps_1A_cactus.txt", sep="\t", header=F)
+
+dim(gaps)
+#118, 383   6   gaps larger than 100bp 
+lratio <- function(read){
+  #returns ratio of lowercase characters 
+  lread <- tolower(read)
+  lst1<- unlist(strsplit(read,""))
+  lst2<- unlist(strsplit(lread,""))
+  return(length(which(lst1==lst2))/nchar(read))
+  
+}
+colnames(gaps) <- c("hsp", "specie", "chrom", "start", "realstart", "len")
+length(unique(gaps$hsp))
+#40,053  hsp's that contain gaps larger than 100bp
+#aggregate based on chromosome, start postion and number of cultivars related to that gap
+gap_agg1 <- aggregate(specie~hsp+start, gaps , FUN=function(v){return(length(unique(v)))})
+gap_agg1 <- gap_agg1[order(gap_agg1$hsp, gap_agg1$start),]
+max(gap_agg1$specie)
+#15
+uins <- gap_agg1[which(gap_agg1$specie==15)  ,]
+dim(uins)
+#706
+gapmerged <- merge(gaps, uins, by.x=c(1,4), by.y=c(1,2))
+dim(gapmerged)
+#10,624
+max(gapmerged$len)
+#9999
+#now for each gap alignment we find the missing one that would be insertion specie
+agg_func <- function(x){
+  #cat(paste(length(x[,3]),","))
+  if(dim(x)[1]==15){
+    spc <- species[which(!species%in%x[,3])]
+    #find chr and position of CS
+    vv <- data.frame()
+    if (spc!="CS"){
+      vv <- x[x[,3]=="CS", c(1,2,4,6)]
+    }else{
+      #stanley is closest in terms of CNV to CS
+      vv <- x[x[,3]=="stanley", c(1,2,4,6)]
+    }
+    return (list(vv[1,1], vv[1,2], spc,  vv[1,3], vv[1,4]))
+  }else
+    return (list(NA,NA,NA,NA,NA))
+}
+res <- by(gapmerged, gapmerged[,c(1,2)], FUN=agg_func, simplify=FALSE)
+res <- unlist(as.list(res))
+length(res)
+#3530
+insdf <- data.frame(matrix(res, ncol=5, byrow =T))
+dim(insdf)
+#706  5
+insdf <- insdf[-which(rowSums(is.na(insdf))==5),]
+dim(insdf)
+#690  5
+colnames(insdf) <- c("hsp","start","specie","chrom","len")
+insdf$hsp <- as.numeric(insdf$hsp)
+insdf$start <- as.numeric(insdf$start)
+insdf$len <- as.numeric(insdf$len)
+max(insdf$len)
+#9999
+insdf <- insdf[order(insdf$hsp, insdf$start),]
+
+write.table(insdf, file="uins_cactus.txt", quote=F, sep="\t", row.names = F, col.names=F)
+
+insdf[which(insdf$len==9999),]
+# hsp      start  specie chrom  len
+# 3787     1     CS     1A     9999
+insdf <- insdf[order(-insdf$len),]
+
+#to see more details of that insertion
+gapmerged[gapmerged$len==9999,]
+
+gaps <- gaps[gaps$hsp==3787,]
 #####################################################################################################
-#bedtools intersect -wao -a /scratchdata1/users/a1195806/mario/references/CS2.1/whole/iwgsc_refseqv2.1_annotation_200916_HC.bed  -b /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/msa.bed > /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/intersect.bed
+#This code is for finding genes in core alignment
+#java -jar  MFbio.jar  --task maf2bed --srcdir /outDir/core_msa.maf.gz  --destdir core_CS.bed --p1 CS
+#Now intersection of core and genes
+#bedtools intersect -wao -a /scratchdata1/users/a1195806/mario/references/CS2.1/whole/iwgsc_refseqv2.1_annotation_200916_HC.bed  -b /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/core_CS.bed > /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/intersect.bed
 inter <- read.table("intersect.bed", sep="\t", header=F)
 dim(inter)
-#129,091      7
+#133,641      7
 #aggregate based on gene region (v1,v2,v3) and return sum of core coverage for that region
 agg <- aggregate(inter$V7, by=list(inter$V1, inter$V2, inter$V3), FUN=sum, na.rm=TRUE)
 dim(agg)
 # 105463      3
 dim(agg[agg$x==0,])
-#16977   3  16% of genes not covered at all
+#8929   3  8.4% of genes not covered at all
+8929/105463
 sum(agg$x)
-# 287846655
+# 308174096
 
 sum(agg$Group.3-agg$Group.2)
 #368986606
-#78% genic region covered 
+308174096/368986606
+#83.5% genic region covered 
 
 length(which((agg$Group.3-agg$Group.2 -2)<= agg$x))
-#64346
-#0.598646   61% of gene are fully covered
-#now draw the graph of gene area
+#68665
+68665/105463
+#0.651   65% of gene are fully covered
+#now draw the graph of gene area  ; Supplementary Figure 2
 agg$million <- floor(agg$Group.2/1000000)
 aggm <- aggregate(agg$x, by=list(agg$Group.1, agg$million), FUN=sum, na.rm=TRUE)
 max(aggm$x)
-#149664
+#156273
 aggm[aggm$x==max(aggm$x),]
-#7B     592 149664
-ymax <- 200000 
+#7B     592 156273
+ymax <- 150000 
 dev.off();
 plot.new()
 par(mar=c(0,2,0,0), mfrow = c(23,1))
@@ -237,14 +340,17 @@ notcovered$Group.2 <- notcovered$Group.2 + 1
 
 gen <- read.table("iwgsc_refseqv2.1_annotation_200916_HC.gen", sep="\t", header=F)
 gen$V2 <- substr(gen$V2,4,5)
-merged <- merge(notcovered, gen , by.x=c(1,2), by.y=c(2,3), all.x = T)
-dim(merged)
-#17022
-length(unique(merged$V1))
-write.table(merged$V1, file="notfoundgenes.txt", quote=F)
+nmerged <- merge(notcovered, gen , by.x=c(1,2), by.y=c(2,3), all.x = T)
+dim(nmerged)
+#8956   9
+length(unique(nmerged$V1))
+#8948
+write.table(nmerged$V1, file="notfoundgenes.txt", quote=F)
+#List of genes in notfoundgenes.txt  was used for gene ontoly analysis at www.comparativego.com
 
 
 #############################################################################################
+#This code is for Transposable Element analysis and graphs
 te <- read.table("Tae.Chinese_Spring.refSeqv2.1.TE_annotation.txt", sep="\t", header=F)
 dim(te)
 #4731260       6
@@ -252,85 +358,77 @@ tab <- table(te$V1,te$V5)
 addmargins(tab)
 tab2 <- table(te$V5, te$V6)
 tab2
-te$V2 <- te$V2 -1
 te$V2 <- as.integer(te$V2) #this will avoid scientific notation
 #te$V1 <- substr(te$V1,4,5)
-write.table(te[,1:3], file="core/Tae.Chinese_Spring.refSeqv2.1.TE_annotation.bed", sep="\t", quote = F,  row.names = F, col.names=F)
-#bedtools intersect -wao -a /scratchdata1/users/a1195806/mario/references/CS2.1/whole/Tae.Chinese_Spring.refSeqv2.1.TE_annotation.bed  -b /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/msa.bed > /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15/intersect_te.bed
+write.table(te[,1:3], file="Tae.Chinese_Spring.refSeqv2.1.TE_annotation.bed", sep="\t", quote = F,  row.names = F, col.names=F)
+#bedtools intersect -wao -a /scratchdata1/users/a1195806/mario/references/CS2.1/whole/Tae.Chinese_Spring.refSeqv2.1.TE_annotation.bed  -b /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15_7/msa_cnv_sorted.bed > /scratchdata1/users/a1195806/mario/projects/msa/wheat/minimap_out_sm_15_7/intersect_te.bed
 inter_te <- read.table("intersect_te.bed", sep="\t", header=F)
 dim(inter_te)
-#6,284,637       7
-class(inter_te$V3)
+#6,408,589       7
+
 #aggregate based on TE region and return sum of core coverage of that region
-agg <- aggregate(inter_te$V7, by=list(inter_te$V1, inter_te$V2, inter_te$V3), FUN=sum, na.rm=TRUE)
-dim(agg)
+aggte <- aggregate(inter_te$V7, by=list(inter_te$V1, inter_te$V2, inter_te$V3), FUN=sum, na.rm=TRUE)
+dim(aggte)
 # 4,731,106       4   however this 4.7 is not unique TE because it contains match_part as well
-max(inter_te$V2)
-#0-based
-sum(agg$x)
-# 8,246,891,905
+sum(aggte$x)
+# 8,594,324,451
 sum(inter_te$V7)
-#8,246,891,905
+#8,594,324,451
 
 sum(agg$Group.3-agg$Group.2)
-#12,102,193,667
-#0.6814378 TE region covered 
+#12,097,462,561
+#8594324451/12097462561
+#0.71  TE region covered
 
 #to find unique entries of TE we need to merge it with Tae.Chinese_Spring.refSeqv2.1.TE_annotation.txt
-#to match coordinates of bed and gff we need to decrease te$V2 by 1
-merged <-  merge(inter_te, te , by=c(1,2,3), all.x = T)
-dim(merged)
-#6,285,027      10
+temerged <-  merge(inter_te, te , by=c(1,2,3), all.x = T)
+dim(temerged)
+#6,408,983      10
 #now aggregate based on V4.y (TE ID)
 #now filter for complete TE
 #merged <- merged[merged$V6.y=="complete",]
 #dim(merged)
 # 2,437,596      11
-agg2 <- aggregate(merged$V7, by=list(merged$V4.y), FUN=sum, na.rm=TRUE)
+agg2 <- aggregate(temerged$V7, by=list(temerged$V4.y), FUN=sum, na.rm=TRUE)
 dim(agg2)
 #3,997,530       2 :This is total number of unique TE
 #1109706       2  :This is total number of unique complete TE
 dim(agg2[agg2$x==0,])
-#863,904      2  21.6% of TE not covered at all
-#213449      2   19.2% of complete TE not covered at all
+#699420      2  17.5% of TE not covered at all
+#699420/3997530
 
 #to find number of TE fully covered we need more information:
-merged$len <- merged$V3 - merged$V2 + 1 
-agg3 <- aggregate(merged$len, by=list(merged$V4.y), FUN=mean, na.rm=TRUE)
+temerged$len <- temerged$V3 - temerged$V2 + 1 
+agg3 <- aggregate(temerged$len, by=list(temerged$V4.y), FUN=mean, na.rm=TRUE)
 dim(agg3)
 #3,997,530       2
-#1,109,706       2
 #reorder agg3 based on agg2
 row.names(agg3) <- agg3$Group.1
 agg3 <- agg3[agg2$Group.1, ]
 length(which((agg3$x-3)<= agg2$x))
-#2,360,925
-
-#59.06% fully covered
-#522,002
-#47% of complete TE fully covered
+#2,476,922
+#2476922/3997530
+#61.96% fully covered
 
 
 
 #now we want separate positions of TE in core based on different TE types
-levels(as.factor(merged$V5.y))
+levels(as.factor(temerged$V5.y))
 #"DHH" "DTA" "DTC" "DTH" "DTM" "DTT" "DTX" "DXX" "RIX" "RLC" "RLG" "RLX" "SIX" "XXX"
-agg4 <- aggregate(merged$V7, by=list(merged$V5.y, merged$V1), FUN=sum, na.rm=TRUE)
+agg4 <- aggregate(temerged$V7, by=list(temerged$V5.y, temerged$V1), FUN=sum, na.rm=TRUE)
 #use output of agg4 to fill the supplementary table 1 in the manuscript
-agg4[agg4$Group.1=="RLG",]
+agg4[agg4$Group.1=="DTH",]
 #now extract 
-stat1 <- merged[,c(1,2,3,7,9)]
+stat1 <- temerged[,c(1,2,3,7,9)]
 stat1 <- stat1[stat1$V7!=0,]
 stat1 <- stat1[order(stat1$V1, stat1$V2),]
 stat1$million <- floor(stat1$V2/1000000)
 agg5 <- aggregate(stat1$V7, by=list(stat1$V1, stat1$million), FUN=sum, na.rm=TRUE)
 max(agg5$x)
-#1027102
-#586648  complete TE
-agg5[agg5$x==1027102,]
+#1044299
+
+agg5[agg5$x==1044299,]
 #2A     530 1027102
-agg5[agg5$x==586648,]
-#4B     185 586648
 dev.off();
 plot.new()
 par(mar=c(0,2,0,0), mfrow = c(23,1), lwd=0.8)
@@ -391,7 +489,8 @@ mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 #find correlation with geneics region or aggm
 gene_RLG <- merge(aggm, agg6, by=c(1,2))
 cor(gene_RLG$x.x, gene_RLG$x.y)
-#-0.1209303
+#-0.2062
+
 stat2<- stat1[stat1$V5.y=="RLC",]
 agg7 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 dev.off();
@@ -422,14 +521,14 @@ plot(agg7[agg7$Group.1=="7D","Group.2"],agg7[agg7$Group.1=="7D","x"],type="l",  
 mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 gene_RLC <- merge(aggm, agg7, by=c(1,2))
 cor(gene_RLC$x.x, gene_RLC$x.y)
-#0.26023
+#0.2099358
 
 #now combination of LTR retrotransposons : RLC+RLG+RLX
-
+#supplementary Figure 3
 stat2<- stat1[stat1$V5.y%in% c("RLC","RLG","RLX"),]
 agg7 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 max(agg7$x)
-#902632
+#915719
 #528,285 complete retrotrasposon
 ymax <- 1000000
 dev.off();
@@ -460,17 +559,18 @@ plot(agg7[agg7$Group.1=="7D","Group.2"],agg7[agg7$Group.1=="7D","x"],type="l",  
 mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 gene_RL <- merge(aggm, agg7, by=c(1,2))
 cor(gene_RL$x.x, gene_RL$x.y)
-#-0.0449
+#-0.1352366
 
+#Supplementary Figure 4
 stat2<- stat1[stat1$V5.y=="DTC",]
 agg8 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 max(agg8$x)
-#361203
+#369579
 #156,602 complete CACTA transposon
-agg8[agg8$x==361203,]
-#3D     193 361203
+agg8[agg8$x==369579,]
+# 4D     411 369579
 ymax <- 400000
-ymax <- 200000
+#ymax <- 200000
 dev.off();
 plot.new()
 par(mar=c(0,2,0,0), mfrow = c(23,1))
@@ -498,15 +598,15 @@ plot(agg8[agg8$Group.1=="7D","Group.2"],agg8[agg8$Group.1=="7D","x"],type="l",  
 mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 gene_DTC <- merge(aggm, agg8, by=c(1,2))
 cor(gene_DTC$x.x, gene_DTC$x.y)
-#0.063
+#-0.1246951
 
 
 stat2<- stat1[stat1$V5.y=="RIX",]
 agg9 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 max(agg9$x)
-#52976
-agg9[agg9$x==52976,]
-# 2B      26 52976
+#53188
+agg9[agg9$x==53188,]
+# 2B      26 53188
 ymax <- 100000
 
 dev.off();
@@ -537,13 +637,13 @@ mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 
 gene_RIX <- merge(aggm, agg9, by=c(1,2))
 cor(gene_RIX$x.x, gene_RIX$x.y)
-#0.25
+#0.2469125
 
 stat2<- stat1[stat1$V5.y=="SIX",]
 agg10 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 gene_SIX <- merge(aggm, agg10, by=c(1,2))
 cor(gene_SIX$x.x, gene_SIX$x.y)
-#0.054
+#0.05328177
 
 stat2<- stat1[stat1$V5.y=="DHH",]
 agg11 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
@@ -555,23 +655,23 @@ stat2<- stat1[stat1$V5.y=="DTM",]
 agg12 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 gene_DTM <- merge(aggm, agg12, by=c(1,2))
 cor(gene_DTM$x.x, gene_DTM$x.y)
-#0.1889
+#0.1838
 
 stat2<- stat1[stat1$V5.y=="DTA",]
 agg13 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 gene_DTA <- merge(aggm, agg13, by=c(1,2))
 cor(gene_DTA$x.x, gene_DTA$x.y)
-#-0.05305163
+#-0.05553094
 
 stat2<- stat1[stat1$V5.y=="DTH",]
 agg14 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 gene_DTH <- merge(aggm, agg14, by=c(1,2))
 cor(gene_DTH$x.x, gene_DTH$x.y)
-#0.2868945
+#0.288926
 stat2<- stat1[stat1$V5.y=="DTT",]
 agg15 <- aggregate(stat2$V7, by=list(stat2$V1, stat2$million), FUN=sum, na.rm=TRUE)
 max(agg15$x)
-#9323
+#10,159
 ymax <- 10000
 dev.off();
 plot.new()
@@ -604,7 +704,7 @@ mtext(side = 1, text = "Chromosome Position(1Mbp)", line = 2.5)
 
 gene_DTT <- merge(aggm, agg15, by=c(1,2))
 cor(gene_DTT$x.x, gene_DTT$x.y)
-#0.305503
+#0.3028991
 
 #now sum of DNA transposan
 stat2<- stat1[stat1$V5.y%in%c("DTM","DTC","DTA","DTH","DTT","DTX", "DHH"),]
@@ -643,6 +743,30 @@ gene_DT <- merge(aggm, agg16, by=c(1,2))
 cor(gene_DT$x.x, gene_DT$x.y)
 #-0.0232
 ###############################################################
+#below code is for generating Figure 4d(heatmap) of manuscript
+dfcnv <- read.table("cnv_table.txt", header=F, sep="\t")
+rownames(dfcnv) <- dfcnv$V1
+dfcnv <- dfcnv[,-1]
+#dfcnv <- dfcnv[,-ncol(dfcnv)]
+colnames(dfcnv) <- c("1A","1B","1D","2A","2B","2D","3A","3B","3D","4A","4B","4D","5A","5B","5D","6A","6B","6D","7A","7B","7D")
+dfcnv[,] <- lapply(dfcnv[,], as.character)
+dfcnv[,] <- lapply(dfcnv[,], strsplit, ":", fixed=T)
+cnv_vec <- sapply(as.vector(as.matrix(dfcnv)), "[", 2)
+cnv_mat <- matrix(cnv_vec, nrow = nrow(dfcnv), ncol = ncol(dfcnv))
+dfcnv2 <- as.data.frame(cnv_mat)
+rownames(dfcnv2) <- rownames(dfcnv) 
+colnames(dfcnv2) <- colnames(dfcnv)
+dfcnv2[,] <- lapply(dfcnv2[,], as.numeric)
+heatmap(as.matrix(dfcnv2), scale='none' )
+points(0.26,0.9, col = "black", pch = 19, cex = 1)#top left
+points(0.71,0, col = "black", pch = 7, cex = 1)#bottom   right
+points(0.28,0.9, col = "black", pch = 7, cex = 1)#bottom   right
+points(0.42,0.9, col = "black", pch = 17, cex = 1)
+
+dev.off();
+###############################################################
+
+#bedtools intersect -u -f 0.9 -a  iwgsc_refseqv2.1_annotation_200916_HC+.bed -b cnv_700_sorted.bed > genes_cnv_90.bed
 dfcnv <- read.table("genes_cnv.bed", sep="\t", header=F)
 dim(dfcnv)
 #591   3
@@ -751,124 +875,7 @@ agg
 sum(agg$cc)
 #744
 ###############################################
-#now look at 10k upstream TSS of all genes: Figure 4 of manuscript
-df10kte <- read.table("10K_TSS_te.txt", sep="\t", header=F)
-dim(df10kte)
-#545,047     11
-#now convert coordinates in respect to TSS as 0-10,000
 
-corconvert <- function(row){
-  c2 <- 0
-  c3 <- 0
-  vec <- as.numeric(row[c(1,2,4,5)])
-
-  
-if(row[3]=='-'){
-#  cat(class(row[2]), ":" ,class(row[7]))
-  c2 <- vec[1] - vec[3];
-  c3 <- vec[2] - vec[3];
-}else{
-  c2 <- vec[4] - vec[2] 
-  c3 <- vec[4] - vec[1] 
-}
-  return(c(c2,c3));
-}
-
-dfout <- apply(df10kte[,c(2,3,5,6,7)],1, corconvert)
-dfout <- t(dfout)
-dim(dfout)
-# 545047  2
-df10kte[,2:3] <- dfout
-max(df10kte$V2)
-#9998
-min(df10kte$V2)
-#0
-all(df10kte$V2<df10kte$V3)
-#TRUE
-
-lst <- split(df10kte[,c(1,2,3,12)], df10kte$V12)
-length(lst)
-#14
-class(lst[[1]])
-#each element of list is dataframe
-sum_up <- function(df){
-  #returns a vector of length 10K
-  vec <- rep(0,10000)
-  
-  for(i in 1:nrow(df)){
-    vec[df[i,2]:df[i,3]] <- vec[df[i,2]:df[i,3]]+1
-  }
-  return(vec)
-  
-}
-conv <- lapply(lst, FUN=sum_up)
-class(conv)
-#"list"
-length(conv)
-#14
-class(conv[[2]])
-# "numeric"
-names(conv)
-#"DHH" "DTA" "DTC" "DTH" "DTM" "DTT" "DTX" "DXX" "RIX" "RLC" "RLG" "RLX" "SIX" "XXX"
-#red, green,blue,yellow,cyan,magenta,black,gray,orange,purple,brown,pink,teal
-
-dev.off();
-plot(0, 0, type = "l", xlim = c(0,9999),ylim = c(0,4000),      xlab = "Position upstream TSS", ylab = "Number of TE" )
-lapply(conv, max)
-lines(conv[["DTM"]], type='l',col='red')
-lines(conv[["DTH"]], type='l',col='green')
-lines(conv[["DTT"]], type='l',col='blue')
-lines(conv[["DTA"]], type='l',col='cyan')
-lines(conv[["RIX"]], type='l',col='magenta')
-lines(conv[["SIX"]], type='l',col='orange')
-lines(conv[["DTX"]], type='l',col='black')
-legend("topright", c("Mutator", "Harbinger", "Mariner", "hAT", "LINE", "SINE", "Unclassified DT"), fill=c("red", "green","blue","cyan","magenta", "orange","black"), bty="n",cex=0.75, ncol = 2)
-
-dev.off();
-plot(0, 0, type = "l", xlim = c(0,9999),ylim = c(0,30000),      xlab = "Position upstream TSS", ylab = "Number of TE" )
-
-
-lines(conv[["DTC"]], type='l',col='gray')
-lines(conv[["DHH"]], type='l',col='orange')
-lines(conv[["RLC"]], type='l',col='pink')
-lines(conv[["RLG"]], type='l',col='#1B9E77')
-
-legend("topleft", c("CACTA", "Helitron", "Copia", "Gypsy"), fill=c("grey", "orange","pink","#1B9E77"), bty="n",cex=0.75, ncol = 2)
-
-dfcnv <- read.table("genes_cnv_90.bed", sep="\t", header=F)
-dim(dfcnv)
-#591 5
-
-df10kte <- df10kte[df10kte$V4 %in%  dfcnv$V5, ]
-dim(df10kte)
-#2838  13
-lst <- split(df10kte[,c(1,2,3,12)], df10kte$V12)
-length(lst)
-#14
-conv <- lapply(lst, FUN=sum_up)
-lapply(conv, max)
-
-dev.off();
-plot(0, 0, type = "l", xlim = c(0,9999),ylim = c(0,25),      xlab = "Position upstream TSS", ylab = "Number of TE" )
-lapply(conv, max)
-lines(conv[["DTM"]], type='l',col='red')
-lines(conv[["DTH"]], type='l',col='green')
-lines(conv[["DTT"]], type='l',col='blue')
-lines(conv[["DTA"]], type='l',col='cyan')
-lines(conv[["RIX"]], type='l',col='magenta')
-lines(conv[["SIX"]], type='l',col='orange')
-lines(conv[["DTX"]], type='l',col='black')
-legend("topright", c("Mutator", "Harbinger", "Mariner", "hAT", "LINE", "SINE", "Unclassified DT"), fill=c("red", "green","blue","cyan","magenta", "orange","black"), bty="n",cex=0.75, ncol = 2)
-
-dev.off();
-plot(0, 0, type = "l", xlim = c(0,9999),ylim = c(0,130),      xlab = "Position upstream TSS", ylab = "Number of TE" )
-lines(conv[["DTC"]], type='l',col='gray')
-lines(conv[["DHH"]], type='l',col='orange')
-lines(conv[["RLC"]], type='l',col='pink')
-lines(conv[["RLG"]], type='l',col='#1B9E77')
-
-legend("topleft", c("CACTA", "Helitron", "Copia", "Gypsy"), fill=c("grey", "orange","pink","#1B9E77"), bty="n",cex=0.75, ncol = 2)
-######################################################################
 dfcnvte <- read.table("cnv_te.bed", sep="\t", header=F)
 dim(dfcnvte)
 #113,313     10
@@ -1001,56 +1008,11 @@ agg3
 13 SIX     8
 14 XXX   880'
 sum(agg3$cc)
-####################################################################
-#below code is for generating figure 2(heatmap) of manuscript
-agg4 <- agg4[agg4$Group.1!="XXX",]
-te_symbols <- c("Copia", "Gypsy", "Line", "Sine", "Unclassified LTR", "Helitron","Mutator", "hAT","CACTA","PIF/Harrbinger","Tc1/Mariner", "Unclassified TIR", "Unkonwn Transposon")
-names(te_symbols) <- c("RLC","RLG","RIX","SIX","RLX","DHH","DTM","DTA","DTC","DTH","DTT", "DTX", "DXX")
-agg4_high <- agg4[agg4$Group.1 %in% c("RLC","RLG","DTC", "RLX", "RIX") ,]
-agg4_low <- agg4[!agg4$Group.1 %in% c("RLC","RLG","DTC", "RLX", "RIX") ,]
-tab <-  xtabs(x ~ Group.1 + Group.2, data = agg4_low)
-temat <- as.matrix(tab)
-row.names(temat)<- te_symbols[row.names(temat)]
-heatmap(temat, scale='none' )
-min(temat)
-mean(temat)
-max(temat)
-dev.off()
-tab2 <-  xtabs(x ~ Group.1 + Group.2, data = agg4_high)
-temat2 <- as.matrix(tab2)
-row.names(temat2)<- te_symbols[row.names(temat2)]
-heatmap(temat2, scale='none' )
-min(temat2)
-max(temat2)
-####################################################################
-#below code is for generating figure 3(heatmap) of manuscript
-dfcnv <- read.table("cnv.txt", header=F, sep="\t")
-rownames(dfcnv) <- dfcnv$V1
-dfcnv <- dfcnv[,-1]
-dfcnv <- dfcnv[,-ncol(dfcnv)]
-colnames(dfcnv) <- c("1A","1B","1D","2A","2B","2D","3A","3B","3D","4A","4B","4D","5A","5B","5D","6A","6B","6D","7A","7B","7D")
-dfcnv[,] <- lapply(dfcnv[,], as.character)
-dfcnv[,] <- lapply(dfcnv[,], strsplit, ":", fixed=T)
-cnv_vec <- sapply(as.vector(as.matrix(dfcnv)), "[", 2)
-cnv_mat <- matrix(cnv_vec, nrow = nrow(dfcnv), ncol = ncol(dfcnv))
-dfcnv2 <- as.data.frame(cnv_mat)
-rownames(dfcnv2) <- rownames(dfcnv) 
-colnames(dfcnv2) <- colnames(dfcnv)
-dfcnv2[,] <- lapply(dfcnv2[,], as.numeric)
-heatmap(as.matrix(dfcnv2), scale='none' )
-points(0.26,0.9, col = "black", pch = 19, cex = 1)#top left
-points(0.71,0, col = "black", pch = 7, cex = 1)#bottom   right
-points(0.28,0.9, col = "black", pch = 7, cex = 1)#bottom   right
-points(0.42,0.9, col = "black", pch = 17, cex = 1)
 
-dev.off();
-min(dfcnv2)
-max(dfcnv2)
-#legend(x="topright", legend=c("min", "ave", "max"),  fill=colorRampPalette(brewer.pal(8, "Oranges"))(3))
 
 #############################################################################################
-#circlize coverage graphs
-#First we need to re-format dfcov as: chr start end value
+#circlize coverage graphs Figure 5 of manuscript
+#First we need to re-format dfcovg as: chr start end value
 dim(dfcovg)
 covlst <- list()
 i <- 1
@@ -1155,30 +1117,43 @@ max(as.numeric(dffullcovg[(dffullcovg$chr=='7D' & dffullcovg$value>0),3]))
 #[1] 6.43e+08
 
 library(circlize)
+circos.clear()
+circos.par("start.degree" = 90, gap.after = c(rep(2,20), 10))
+
+
 #genomics application
+
+
+
+
+circos.initializeWithIdeogram()
+circos.genomicTrackPlotRegion(bed, panel.fun = function(region, value, ...) {
+  circos.genomicPoints(region, value, ...)
+})
+class(bed[,5])
 
 dfA_covg <- dffullcovg[dffullcovg$chr %in% c("1A","2A","3A","4A","5A","6A","7A"),]
 dfA_covg <- dfA_covg[dfA_covg$value>0,]
 dfA_covg$value <- dfA_covg$value/1000000;
 dfA_covg$chr <- paste("chr", dfA_covg$chr, sep="")
 max(dfA_covg$value)
-#0.937
+#0.93627
 dfgA_covg <- dfgcovg[dfgcovg$chr %in% c("1A","2A","3A","4A","5A","6A","7A"),]
 dfgA_covg$value <- dfgA_covg$value/1000000;
 dfgA_covg$chr <- paste("chr", dfgA_covg$chr, sep="")
 max(dfgA_covg$value)
-#0.1324
+#0.131636
 retroA_covg <- agg7[agg7$chr %in% c("1A","2A","3A","4A","5A","6A","7A"),]
 retroA_covg$value <- retroA_covg$value/1000000;
 retroA_covg$chr <- paste("chr", retroA_covg$chr, sep="")
 max(retroA_covg$value)
-#0.902
+#0.915719
 
 dtcA_covg <- agg8[agg8$chr %in% c("1A","2A","3A","4A","5A","6A","7A"),]
 dtcA_covg$value <- dtcA_covg$value/1000000;
 dtcA_covg$chr <- paste("chr", dtcA_covg$chr, sep="")
 max(dtcA_covg$value)
-#0.26
+#0.279875
 
 centromere_A <- c(213000000, 335000000, 330000000, 313000000, 253000000, 290000000, 365000000)
 names(centromere_A) <- c("chr1A","chr2A","chr3A","chr4A","chr5A","chr6A","chr7A")
@@ -1187,39 +1162,40 @@ names(centromere_B) <- c("chr1B","chr2B","chr3B","chr4B","chr5B","chr6B","chr7B"
 centromere_D <- c(175000000, 273000000, 245000000, 205000000, 190000000, 235000000, 340000000)
 names(centromere_D) <- c("chr1D","chr2D","chr3D","chr4D","chr5D","chr6D","chr7D")
 #repeat below code 3 times
-  genome <- "B"
-  chrs <- paste(c(1:7),genome,sep="")
-  chrs2 <- paste("chr",chrs, sep="")
-  if (genome=="A"){
-    centromere <- c(213000000, 335000000, 330000000, 313000000, 253000000, 290000000, 365000000)
-  }else if (genome=="B"){
-    centromere <- c(240000000, 358000000, 355000000, 300000000, 200000000, 333000000, 310000000)
-  }else{
-    centromere <- c(175000000, 273000000, 245000000, 205000000, 190000000, 235000000, 340000000)
-  }
-  names(centromere) <- chrs2
-  
-  dfA_covg <- dffullcovg[dffullcovg$chr %in% chrs,]
-  dfA_covg <- dfA_covg[dfA_covg$value>0,]
-  dfA_covg$value <- dfA_covg$value/1000000;
-  dfA_covg$chr <- paste("chr", dfA_covg$chr, sep="")
-  max(dfA_covg$value)
-  #0.937
-  dfgA_covg <- dfgcovg[dfgcovg$chr %in% chrs,]
-  dfgA_covg$value <- dfgA_covg$value/1000000;
-  dfgA_covg$chr <- paste("chr", dfgA_covg$chr, sep="")
-  max(dfgA_covg$value)
-  #0.1324
-  retroA_covg <- agg7[agg7$chr %in% chrs,]
-  retroA_covg$value <- retroA_covg$value/1000000;
-  retroA_covg$chr <- paste("chr", retroA_covg$chr, sep="")
-  max(retroA_covg$value)
-  #0.902
-  
-  dtcA_covg <- agg8[agg8$chr %in% chrs,]
-  dtcA_covg$value <- dtcA_covg$value/1000000;
-  dtcA_covg$chr <- paste("chr", dtcA_covg$chr, sep="")
-  max(dtcA_covg$value)  
+genome <- "D"
+chrs <- paste(c(1:7),genome,sep="")
+chrs2 <- paste("chr",chrs, sep="")
+if (genome=="A"){
+  centromere <- c(213000000, 335000000, 330000000, 313000000, 253000000, 290000000, 365000000)
+}else if (genome=="B"){
+  centromere <- c(240000000, 358000000, 355000000, 300000000, 200000000, 333000000, 310000000)
+}else{
+  centromere <- c(175000000, 273000000, 245000000, 205000000, 190000000, 235000000, 340000000)
+}
+names(centromere) <- chrs2
+
+dfA_covg <- dffullcovg[dffullcovg$chr %in% chrs,]
+dfA_covg <- dfA_covg[dfA_covg$value>0,]
+dfA_covg$value <- dfA_covg$value/1000000;
+dfA_covg$chr <- paste("chr", dfA_covg$chr, sep="")
+max(dfA_covg$value)
+#0.936277
+dfgA_covg <- dfgcovg[dfgcovg$chr %in% chrs,]
+dfgA_covg$value <- dfgA_covg$value/1000000;
+dfgA_covg$chr <- paste("chr", dfgA_covg$chr, sep="")
+max(dfgA_covg$value)
+#0.131636
+retroA_covg <- agg7[agg7$chr %in% chrs,]
+retroA_covg$value <- retroA_covg$value/1000000;
+retroA_covg$chr <- paste("chr", retroA_covg$chr, sep="")
+max(retroA_covg$value)
+#0.915719
+
+dtcA_covg <- agg8[agg8$chr %in% chrs,]
+dtcA_covg$value <- dtcA_covg$value/1000000;
+dtcA_covg$chr <- paste("chr", dtcA_covg$chr, sep="")
+max(dtcA_covg$value)  
+dev.off()
 circos.clear()
 circos.par("start.degree" = 90, "track.height" = 0.1)
 #dim(cytoband)

@@ -132,16 +132,17 @@ do
     rep=$(grep -P "^[^>]" ${arr[1]} | tr -dc [acgt] | wc -c)
     repgb=$((rep/1073741824))
     echo Repeat size gb : $repgb;
-    if (($repgb > 10) || ($gb > 10))
+    if (( $repgb > 10  ||  $gb > 10  ))
     then
-     f_param="0.1";
-    elif (( $repgb > 7 ) || ($gb > 7))
+       f_param="0.1";
+    elif (( $repgb > 7  ||  $gb > 7 ))
     then
-     f_param="0.05";
-    elif (( $repgb > 3 ) || ($gb > 3))
+       f_param="0.05";
+    elif (( $repgb > 3  ||  $gb > 3 ))
     then
-     f_param="0.005";    
-    fi   
+       f_param="0.005";    
+    fi  
+
 
   else
     echo $queryfile;
@@ -198,6 +199,6 @@ fi
 java -Djava.awt.headless=true -jar -Xmx${mem}g MFbio.jar --task maf2msaMT --srcdir $outdir/filtered_maf --p1 ${maflist}  --file1 $outdir/msa.maf.gz --file2 $genome   --threads ${cores};
 
 cd $outdir
-cat $(ls msa.maf_*.gz -v) > msa.maf.gz;
+cat $(ls msa.maf_*.gz -v) > core_msa.maf.gz;
 rm msa.maf_*.gz
 
