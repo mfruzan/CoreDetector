@@ -174,7 +174,7 @@ do
     exitcode=$(echo $?)
     echo exit code is $exitcode
     newmaf=${twin}".maf"
-    java -Djava.awt.headless=true -jar /scratchdata1/users/a1195806/mario/biotools/MFbio/MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
+    java -Djava.awt.headless=true -jar MFbio.jar --task maf2uniquequery --srcdir $outdir/maf/${newmaf} --destdir $outdir/temp_fasta/${twin}".fa" --file1 $outdir/filtered_maf/${newmaf} --p1 ${mlen}  --p2  ${chromosome};
     queryfile=$outdir/temp_fasta/${twin}".fa";
     maflist=${newmaf}","${maflist};
   fi
