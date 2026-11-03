@@ -94,6 +94,11 @@ mem=${mem%.*}
 mem=$(($mem))
 echo available memory ${mem} gb;
 
+# ignore blank lines
+genome_src=$genome
+genome="$outdir/genomes_nonblank.txt"
+grep -v '^[[:space:]]*$' "$genome_src" > "$genome"
+
 declare -i id=1;
 declare -i I_param=4;
 declare -i K_param=1;
