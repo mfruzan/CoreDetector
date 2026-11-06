@@ -39,9 +39,13 @@ RUN wget "https://github.com/attractivechaos/k8/releases/download/v1.0/k8-1.0.ta
 
 # Pull CoreDetector and install
 RUN mkdir -p /CoreDetector
-COPY . /CoreDetector/
+COPY MFbio.jar pipeline_Minimap.sh LICENSE README.md Manual.md /CoreDetector/
+COPY scripts/ /CoreDetector/scripts/
 RUN cp CoreDetector/MFbio.jar CoreDetector/pipeline_Minimap.sh / \
   && chmod u+x pipeline_Minimap.sh
+
+# Bundle example genomes so the README quick start works without a bind-mount
+COPY example/ /example/
 
 # Helpful message for container startup
 RUN echo 'echo -e "Run the CoreDetector Multiple Genome Alignment tool using:\n"\

@@ -5,3 +5,5 @@
 !LICENSE
 !README.md
 !Manual.md
+!example/*.fna
+!example/*.txt
